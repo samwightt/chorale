@@ -8,6 +8,34 @@ interface NotionProps {
   currentID: string
 }
 
+const decorationsApplyer = (properties: any[]) => {
+  return properties.map((item, index) => {
+    let newItem: any = item[0]
+    if (item.length > 1) {
+      item[1].forEach((item: any) => {
+        switch(item[0]) {
+          case "b":
+            newItem = <b key={index}>{newItem}</b>
+            break;
+          case "i":
+            newItem = <em key={index}>{newItem}</em>
+            break;
+          case "s":
+            newItem = <s key={index}>{newItem}</s>
+            break;
+          case "a":
+            newItem = <a href={item[1]} key={index}>{newItem}</a>
+            break;
+          case "c":
+            newItem = <code key={index}>{newItem}</code>
+            break;
+        }
+      })
+    }
+    return newItem
+  })
+}
+
 const NotionRenderer: React.FC<NotionProps> = (props) => {
   const currentBlock = props.blockMap[props.currentID]
 
@@ -20,20 +48,23 @@ const NotionRenderer: React.FC<NotionProps> = (props) => {
       })}
     </div>
   }
+  
+  if (currentBlock.value.type === "header") {
+    if (!currentBlock.value.properties) return null
+    return <div className="mx-5">
+      <h1 className="font-serif text-black text-xl font-bold"><>{decorationsApplyer(currentBlock.value.properties.title)}</></h1>
+      {
+        currentBlock.value.content?.map((item, index) => {
+          return <NotionRenderer key={index} blockMap={props.blockMap} currentID={item}/>
+        })
+      }
+    </div>
+  }
 
   if (currentBlock.value.type === "text") {
+    if (!currentBlock.value.properties) return null
     return <div className="mx-5">
-      <p className="text-black text-md font-sans"><>{currentBlock.value.properties.title.map((item, index) => {
-        let newItem: any = item[0]
-        if (item.length > 1) {
-          item[1].forEach((item: any) => {
-            if (item[0] === "b") newItem = <b key={index}>{newItem}</b>
-            if (item[0] === "i") newItem = <em key={index}>{newItem}</em>
-            if (item[0] === "s") newItem = <s key={index}>{newItem}</s>
-          })
-        }
-        return newItem
-      })}</></p>
+      <p className="text-black text-md font-sans"><>{decorationsApplyer(currentBlock.value.properties.title)}</></p>
       {currentBlock.value.content?.map((item, index) => {
         return <NotionRenderer blockMap={props.blockMap} key={index} currentID={item}/>
       })}

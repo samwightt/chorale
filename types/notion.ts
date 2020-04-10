@@ -3,7 +3,7 @@ export interface BlockType {
   value: {
     id: string
     version: number
-    type: "page" | "text" | "header"
+    type: "page" | "text" | "header" | "column_list" | "column"
     properties: {
       [key: string]: any[][]
     }
@@ -12,6 +12,9 @@ export interface BlockType {
       role: string
       type: string
       allow_search_engine_indexing: boolean
+    }
+    format?: {
+      column_ratio?: number
     }
     created_time: number
     last_edited_time: number

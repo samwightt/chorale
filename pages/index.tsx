@@ -8,6 +8,30 @@ interface NotionProps {
   currentID: string
 }
 
+const widthConverter = (width: number) => {
+  switch(width) {
+    case 0.5:
+      return "w-1/2";
+    case 0.4:
+      return "w-2/5";
+    case 0.3:
+      return "w-1/3";
+    case 0.2:
+      return "w-1/5";
+    case 0.1:
+      return "w-1/12";
+    case 0.6:
+      return "w-3/5";
+    case 0.7:
+      return "w-2/3";
+    case 0.8: 
+      return "w-4/5";
+    case 0.9:
+      return "w-11/12";
+  }
+  return "w-auto";
+}
+
 const decorationsApplyer = (properties: any[]) => {
   return properties.map((item, index) => {
     let newItem: any = item[0]
@@ -52,12 +76,30 @@ const NotionRenderer: React.FC<NotionProps> = (props) => {
   if (currentBlock.value.type === "header") {
     if (!currentBlock.value.properties) return null
     return <div className="mx-5">
-      <h1 className="font-serif text-black text-xl font-bold"><>{decorationsApplyer(currentBlock.value.properties.title)}</></h1>
+      <h1 className="font-serif text-black text-3xl font-bold"><>{decorationsApplyer(currentBlock.value.properties.title)}</></h1>
       {
         currentBlock.value.content?.map((item, index) => {
           return <NotionRenderer key={index} blockMap={props.blockMap} currentID={item}/>
         })
       }
+    </div>
+  }
+
+  if (currentBlock.value.type === "column_list") {
+    return <div className="mx-5">
+      <div className="flex flex-wrap">
+        {currentBlock.value.content?.map((item, index) => {
+          return <NotionRenderer key={index} blockMap={props.blockMap} currentID={item}/>
+        })}
+      </div>
+    </div>
+  }
+
+  if (currentBlock.value.type === "column") {
+    return <div style={{minWidth: '200px', width: `${(currentBlock.value.format?.column_ratio ? currentBlock.value.format?.column_ratio : 1) * 100}%`}}>
+      {currentBlock.value.content?.map((item, index) => {
+        return <NotionRenderer blockMap={props.blockMap} key={index} currentID={item}/>
+      })}
     </div>
   }
 

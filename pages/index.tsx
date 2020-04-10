@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { LoadPageChunkData } from '../types/notion'
 import fetch from 'isomorphic-unfetch'
+import Head from 'next/head'
 
 interface NotionProps {
   blockMap: LoadPageChunkData["recordMap"]["block"]
@@ -12,6 +13,7 @@ const NotionRenderer: React.FC<NotionProps> = (props) => {
 
   if (currentBlock.value.type === "page") {
     return <div>
+      <Head><title>{currentBlock.value.properties.title[0][0]}</title></Head>
       <h1 className="font-serif text-black text-5xl font-bold text-center">{currentBlock.value.properties.title[0][0]}</h1>
       {currentBlock.value.content?.map((item, index) => {
         return <NotionRenderer key={index} blockMap={props.blockMap} currentID={item}/>

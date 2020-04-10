@@ -1,0 +1,27 @@
+{
+  "name": "new-new-site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "next": "^9.3.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^2.1.2",
+    "@types/node": "^13.11.1",
+    "@types/react": "^16.9.34",
+    "postcss-preset-env": "^6.7.0",
+    "tailwindcss": "^1.2.0",
+    "typescript": "^3.8.3"
+  }
+}

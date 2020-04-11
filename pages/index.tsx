@@ -9,7 +9,7 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = (props) => {
   return <div className="container mx-auto">
-    <NotionRenderer blockMap={props.blocks} currentID="ef28925f-6389-4c1d-962d-a11c86879897"/>
+    <NotionRenderer level={0} blockMap={props.blocks} currentID="ef28925f-6389-4c1d-962d-a11c86879897"/>
   </div>
 }
 
@@ -26,6 +26,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     body: raw,
   };
   const res = await fetch('https://www.notion.so/api/v3/loadPageChunk', requestOptions)
+
 
   const data: LoadPageChunkData = await res.json();
 

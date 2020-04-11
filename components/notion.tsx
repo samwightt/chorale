@@ -3,6 +3,7 @@ import { LoadPageChunkData } from '../types/notion'
 interface NotionProps {
   blockMap: LoadPageChunkData["recordMap"]["block"]
   currentID: string
+  level: number
 }
 
 export const decorationsApplyer = (properties: any[]) => {
@@ -61,6 +62,7 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
 
 interface ChildRendererProps {
   blockMap: LoadPageChunkData["recordMap"]["block"]
+  level: number
   ids: string[]
 }
 
@@ -74,20 +76,20 @@ export const ChildRenderer: React.FC<ChildRendererProps> = (props) => {
   for (let i = 0; i < ids.length; i++) {
     const currentId = ids[i]
     if (blockMap[currentId].value.type === "bulleted_list") {
-      bulletArray.push(<NotionRenderer currentID={ids[i]} blockMap={blockMap}/>)
+      bulletArray.push(<NotionRenderer level={props.level + 1} currentID={ids[i]} blockMap={blockMap}/>)
     }
     else if (blockMap[currentId].value.type === "numbered_list") {
-      orderedArray.push(<NotionRenderer currentID={ids[i]} blockMap={blockMap}/>)
+      orderedArray.push(<NotionRenderer level={props.level + 1} currentID={ids[i]} blockMap={blockMap}/>)
     }
     else if (blockMap[currentId].value.type === "column_list") {
-      idArray.push(<div className="flex my-2 flex-wrap"><NotionRenderer currentID={currentId} blockMap={blockMap}/></div>)
+      idArray.push(<div className="flex my-2 flex-wrap"><NotionRenderer level={props.level + 1} currentID={currentId} blockMap={blockMap}/></div>)
     }
     else if (blockMap[currentId].value.type === "column") {
       let width = '100%';
       if (blockMap[currentId].value.format?.column_ratio) {
         width = `${blockMap[currentId].value.format?.column_ratio * 100}%`
       }
-      idArray.push(<div style={{minWidth: '200px', width}}><NotionRenderer currentID={ids[i]} blockMap={blockMap}/></div>)
+      idArray.push(<div style={{minWidth: '200px', width}}><NotionRenderer level={props.level + 1} currentID={ids[i]} blockMap={blockMap}/></div>)
     }
     else {
       if (bulletArray.length > 0) {
@@ -99,7 +101,7 @@ export const ChildRenderer: React.FC<ChildRendererProps> = (props) => {
         orderedArray = []
       }
 
-      idArray.push(<div className="mx-5 my-2" key={i}><NotionRenderer currentID={ids[i]} blockMap={blockMap}/></div>)
+      idArray.push(<div className="mx-5 my-2" key={i}><NotionRenderer level={props.level + 1} currentID={ids[i]} blockMap={blockMap}/></div>)
     }
   }
 
@@ -115,9 +117,10 @@ export const ChildRenderer: React.FC<ChildRendererProps> = (props) => {
 export const NotionRenderer: React.FC<NotionProps> = (props) => {
   const currentBlock = props.blockMap[props.currentID]
   if ((currentBlock.value.type === "header" || currentBlock.value.type === "text" || currentBlock.value.type === "bulleted_list") && !currentBlock.value.properties) return null
+  if (props.level > 0 && currentBlock.value.type === "page") return null;
 
   return <>
     <BlockRenderer block={currentBlock}/>
-    {currentBlock.value.content && <ChildRenderer ids={currentBlock.value.content} blockMap={props.blockMap} />}
+    {currentBlock.value.content && <ChildRenderer level={props.level} ids={currentBlock.value.content} blockMap={props.blockMap} />}
   </>
 }

@@ -50,6 +50,8 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
       return null;
     case "column":
       return null;
+    case "divider":
+      return <div className="w-full border-b border-black"></div>
     case "text":
       return <p className="text-black text-md font-sans whitespace-pre-wrap"><>{decorationsApplyer(block.value.properties.title)}</></p>
     case "bulleted_list":
@@ -109,7 +111,7 @@ export const ChildRenderer: React.FC<ChildRendererProps> = (props) => {
     idArray.push(<ul className="mx-10 my-2 list-disc" key={idArray.length}>{bulletArray}</ul>)
   }
   if (orderedArray.length > 0) {
-    idArray.push(<ol className="mx-10 my-2 list-decimal" key={idArray.length}>{bulletArray}</ol>)
+    idArray.push(<ol className="mx-10 my-2 list-decimal" key={idArray.length}>{orderedArray}</ol>)
   }
   return <>{idArray}</>
 }

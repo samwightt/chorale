@@ -27,7 +27,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
   const res = await fetch('https://www.notion.so/api/v3/loadPageChunk', requestOptions)
 
-
   const data: LoadPageChunkData = await res.json();
 
   return {

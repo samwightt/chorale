@@ -3,7 +3,7 @@ export interface BlockType {
   value: {
     id: string
     version: number
-    type: "page" | "text" | "header" | "column_list" | "column" | "bulleted_list" | "numbered_list" | "divider"
+    type: "page" | "text" | "header" | "column_list" | "column" | "bulleted_list" | "numbered_list" | "divider" | "sub_header" | "sub_sub_header"
     properties: {
       [key: string]: any[][]
     }

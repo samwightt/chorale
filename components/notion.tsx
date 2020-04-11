@@ -46,6 +46,10 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
       return <h1 className="font-serif text-black text-5xl font-bold text-center">{block.value.properties.title[0][0]}</h1>
     case "header":
       return <h1 className="font-serif text-black text-3xl font-bold"><>{decorationsApplyer(block.value.properties.title)}</></h1>
+    case "sub_header":
+      return <h2 className="font-serif text-black text-2xl font-medium"><>{decorationsApplyer(block.value.properties.title)}</></h2>
+    case "sub_sub_header":
+      return <h3 className="font-serif text-black text-xl font-medium"><>{decorationsApplyer(block.value.properties.title)}</></h3>
     case "column_list":
       return null;
     case "column":

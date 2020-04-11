@@ -60,60 +60,82 @@ const decorationsApplyer = (properties: any[]) => {
   })
 }
 
+interface BlockRenderer {
+  block: LoadPageChunkData["recordMap"]["block"][""]
+}
+
+const BlockRenderer: React.FC<BlockRenderer> = (props) => {
+  const { block } = props
+
+  switch(block.value.type) {
+    case "page":
+      return <h1 className="font-serif text-black text-5xl font-bold text-center">{block.value.properties.title[0][0]}</h1>
+    case "header":
+      return <h1 className="font-serif text-black text-3xl font-bold"><>{decorationsApplyer(block.value.properties.title)}</></h1>
+    case "column_list":
+      return null;
+    case "column":
+      return null;
+    case "text":
+      return <p className="text-black text-md font-sans whitespace-pre-wrap"><>{decorationsApplyer(block.value.properties.title)}</></p>
+    case "bulleted_list":
+      return <li className="text-black text-md font-sans whitespace-pre-wrap"><>{decorationsApplyer(block.value.properties.title)}</></li>
+    default:
+      return <div/>
+  }
+}
+
+interface ChildRendererProps {
+  blockMap: LoadPageChunkData["recordMap"]["block"]
+  ids: string[]
+}
+
+const ChildRenderer: React.FC<ChildRendererProps> = (props) => {
+  const { ids, blockMap } = props
+
+  let idArray = []
+  let bulletArray = []
+  let orderedArray = []
+
+  for (let i = 0; i < ids.length; i++) {
+    const currentId = ids[i]
+    if (blockMap[currentId].value.type === "bulleted_list") {
+      bulletArray.push(<NotionRenderer currentID={ids[i]} blockMap={blockMap}/>)
+    }
+    else if (blockMap[currentId].value.type === "column_list") {
+      bulletArray.push(<div className="flex flex-wrap"><NotionRenderer currentID={currentId} blockMap={blockMap}/></div>)
+    }
+    else if (blockMap[currentId].value.type === "column") {
+      let width = '100%';
+      if (blockMap[currentId].value.format?.column_ratio) {
+        width = `${blockMap[currentId].value.format?.column_ratio * 100}%`
+      }
+      bulletArray.push(<div style={{minWidth: '200px', width}}><NotionRenderer currentID={ids[i]} blockMap={blockMap}/></div>)
+    }
+    else {
+      if (bulletArray.length > 0) {
+        idArray.push(<ul className="mx-10 list-disc">{bulletArray}</ul>)
+        bulletArray = []
+      }
+
+      idArray.push(<div className="mx-5"><NotionRenderer currentID={ids[i]} blockMap={blockMap}/></div>)
+    }
+  }
+
+  if (bulletArray.length > 0) {
+    idArray.push(<ul className="mx-10 list-disc">{bulletArray}</ul>)
+  }
+  return <>{idArray}</>
+}
+
 const NotionRenderer: React.FC<NotionProps> = (props) => {
   const currentBlock = props.blockMap[props.currentID]
+  if ((currentBlock.value.type === "header" || currentBlock.value.type === "text" || currentBlock.value.type === "bulleted_list") && !currentBlock.value.properties) return null
 
-  if (currentBlock.value.type === "page") {
-    return <div>
-      <Head><title>{currentBlock.value.properties.title[0][0]}</title></Head>
-      <h1 className="font-serif text-black text-5xl font-bold text-center">{currentBlock.value.properties.title[0][0]}</h1>
-      {currentBlock.value.content?.map((item, index) => {
-        return <NotionRenderer key={index} blockMap={props.blockMap} currentID={item}/>
-      })}
-    </div>
-  }
-  
-  if (currentBlock.value.type === "header") {
-    if (!currentBlock.value.properties) return null
-    return <div className="mx-5">
-      <h1 className="font-serif text-black text-3xl font-bold"><>{decorationsApplyer(currentBlock.value.properties.title)}</></h1>
-      {
-        currentBlock.value.content?.map((item, index) => {
-          return <NotionRenderer key={index} blockMap={props.blockMap} currentID={item}/>
-        })
-      }
-    </div>
-  }
-
-  if (currentBlock.value.type === "column_list") {
-    return <div className="mx-5">
-      <div className="flex flex-wrap">
-        {currentBlock.value.content?.map((item, index) => {
-          return <NotionRenderer key={index} blockMap={props.blockMap} currentID={item}/>
-        })}
-      </div>
-    </div>
-  }
-
-  if (currentBlock.value.type === "column") {
-    return <div style={{minWidth: '200px', width: `${(currentBlock.value.format?.column_ratio ? currentBlock.value.format?.column_ratio : 1) * 100}%`}}>
-      {currentBlock.value.content?.map((item, index) => {
-        return <NotionRenderer blockMap={props.blockMap} key={index} currentID={item}/>
-      })}
-    </div>
-  }
-
-  if (currentBlock.value.type === "text") {
-    if (!currentBlock.value.properties) return null
-    return <div className="mx-5">
-      <p className="text-black text-md font-sans"><>{decorationsApplyer(currentBlock.value.properties.title)}</></p>
-      {currentBlock.value.content?.map((item, index) => {
-        return <NotionRenderer blockMap={props.blockMap} key={index} currentID={item}/>
-      })}
-    </div>
-  }
-
-  return <div/>
+  return <>
+    <BlockRenderer block={currentBlock}/>
+    {currentBlock.value.content && <ChildRenderer ids={currentBlock.value.content} blockMap={props.blockMap} />}
+  </>
 }
 
 interface HomeProps {
@@ -124,11 +146,6 @@ interface HomeProps {
 const Home: React.FC<HomeProps> = (props) => {
   return <>
   <NotionRenderer blockMap={props.blocks} currentID="ef28925f-6389-4c1d-962d-a11c86879897"/>
-    {/* <div className="py-24 flex flex-col items-center">
-      <img src={props.doc.data.profile_image.url}/>
-      <h1 className="font-serif text-black text-5xl font-bold mt-5 text-center">{RichText.asText(props.doc.data.name)}</h1>
-      <p className="max-w-lg text-black text-xl font-serif text-center">{RichText.asText(props.doc.data.tagline)}</p>
-    </div> */}
   </>
 }
 

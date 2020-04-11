@@ -8,7 +8,7 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = (props) => {
-  return <div className="container mx-auto">
+  return <div className="container mx-auto max-w-4xl">
     <NotionRenderer level={0} blockMap={props.blocks} currentID="ef28925f-6389-4c1d-962d-a11c86879897"/>
   </div>
 }

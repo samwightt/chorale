@@ -2,8 +2,8 @@ module.exports = {
   theme: {
     extend: {},
     fontFamily: {
-      'serif': ['Lora', 'serif'],
-      'sans': ['-apple-system', 'Open Sans', 'sans-serif']
+      'serif': ['Lato', 'serif'],
+      'sans': ['-apple-system', 'Lato', 'sans-serif']
     },
     fontSize: {
       'xs': '.75rem',

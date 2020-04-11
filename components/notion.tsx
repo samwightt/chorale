@@ -45,11 +45,11 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
     case "page":
       return <h1 className="font-serif text-black text-5xl font-bold text-center">{block.value.properties.title[0][0]}</h1>
     case "header":
-      return <h1 className="font-serif text-black text-3xl font-bold"><>{decorationsApplyer(block.value.properties.title)}</></h1>
+      return <h1 className="font-serif text-black text-3xl pt-5 font-bold"><>{decorationsApplyer(block.value.properties.title)}</></h1>
     case "sub_header":
-      return <h2 className="font-serif text-black text-2xl font-medium"><>{decorationsApplyer(block.value.properties.title)}</></h2>
+      return <h2 className="font-serif text-black text-2xl pt-4 font-medium font-bold"><>{decorationsApplyer(block.value.properties.title)}</></h2>
     case "sub_sub_header":
-      return <h3 className="font-serif text-black text-xl font-medium"><>{decorationsApplyer(block.value.properties.title)}</></h3>
+      return <h3 className="font-serif text-black text-xl font-medium font-bold pt-3"><>{decorationsApplyer(block.value.properties.title)}</></h3>
     case "column_list":
       return null;
     case "quote":
@@ -59,10 +59,10 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
     case "divider":
       return <div className="w-full border-b border-black"></div>
     case "text":
-      return <p className="text-black text-md font-sans whitespace-pre-wrap"><>{decorationsApplyer(block.value.properties.title)}</></p>
+      return <p className="text-md leading-normal text-black text-md font-sans whitespace-pre-wrap"><>{decorationsApplyer(block.value.properties.title)}</></p>
     case "bulleted_list":
     case "numbered_list":
-      return <li className="text-black text-md font-sans whitespace-pre-wrap"><>{decorationsApplyer(block.value.properties.title)}</></li>
+      return <li className="mt-2 leading-normal text-black text-md font-sans whitespace-pre-wrap"><>{decorationsApplyer(block.value.properties.title)}</></li>
     default:
       return <div/>
   }
@@ -101,11 +101,11 @@ export const ChildRenderer: React.FC<ChildRendererProps> = (props) => {
     }
     else {
       if (bulletArray.length > 0) {
-        idArray.push(<ul className="mx-10 my-2 list-disc">{bulletArray}</ul>)
+        idArray.push(<ul className="mx-12 my-2 list-disc">{bulletArray}</ul>)
         bulletArray = []
       }
       if (orderedArray.length > 0) {
-        idArray.push(<ol className="mx-10 my-2 list-decimal" key={i}>{orderedArray}</ol>)
+        idArray.push(<ol className="mx-12 my-2 list-decimal" key={i}>{orderedArray}</ol>)
         orderedArray = []
       }
 

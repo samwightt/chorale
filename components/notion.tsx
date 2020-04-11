@@ -52,6 +52,8 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
       return <h3 className="font-serif text-black text-xl font-medium"><>{decorationsApplyer(block.value.properties.title)}</></h3>
     case "column_list":
       return null;
+    case "quote":
+      return <blockquote className="font-serif text-black text-xl font-medium border-l-2 border-black pl-2 whitespace-pre-wrap"><>{decorationsApplyer(block.value.properties.title)}</></blockquote>
     case "column":
       return null;
     case "divider":

@@ -133,7 +133,7 @@ const Home: React.FC<HomeProps> = (props) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  context.res.setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate");
+  // context.res.setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate");
 
   var raw = JSON.stringify({"pageId":"ef28925f-6389-4c1d-962d-a11c86879897","limit":200,"cursor":{"stack":[[{"table":"block","id":"ef28925f-6389-4c1d-962d-a11c86879897","index":0}]]},"chunkNumber":0,"verticalColumns":false});
 

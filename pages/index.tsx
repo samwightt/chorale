@@ -26,6 +26,7 @@ const Home: React.FC<HomeProps> = (props) => {
         <meta property="twitter:title" content={pageTitle} />
         <meta property="twitter:site" content="@samwightt" />
         <meta property="twitter:creator" content="@samwightt" />
+        <meta property="twitter:card" content="summary" />
         {pageDescription && (
           <>
             <meta property="og:description" content={pageDescription} />

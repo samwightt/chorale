@@ -19,7 +19,7 @@ interface BaseValueType {
 /**
  * Colors and backgrounds a given block can have in Notion.
  */
-type ColorType =
+export type ColorType =
   | "gray"
   | "brown"
   | "orange"
@@ -92,7 +92,7 @@ interface BaseTextValueType extends BaseValueType {
     title: DecorationType[];
   };
   format?: {
-    block_color: string;
+    block_color: ColorType;
   };
 }
 

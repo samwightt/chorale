@@ -1,10 +1,35 @@
-import { LoadPageChunkData, DecorationType } from "../types/notion";
+import { LoadPageChunkData, DecorationType, ColorType } from "../types/notion";
 
 interface NotionProps {
   blockMap: LoadPageChunkData["recordMap"]["block"];
   currentID: string;
   level: number;
 }
+
+const colorConverter = (color: ColorType) => {
+  switch (color) {
+    case "blue":
+      return "text-blue-600";
+    case "brown":
+      return "text-orange-900";
+    case "gray":
+      return "text-gray-600";
+    case "orange":
+      return "text-orange-600";
+    case "pink":
+      return "text-pink-600";
+    case "purple":
+      return "text-purple-600";
+    case "red":
+      return "text-red-600";
+    case "teal":
+      return "text-teal-600";
+    case "yellow":
+      return "text-yellow-600";
+    default:
+      return "";
+  }
+};
 
 export const decorationsApplyer = (properties: DecorationType[]) => {
   return properties.map((item, index) => {
@@ -38,6 +63,10 @@ export const decorationsApplyer = (properties: DecorationType[]) => {
               </code>
             );
             break;
+          case "h":
+            newItem = (
+              <span className={colorConverter(item[1])}>{newItem}</span>
+            );
         }
       });
     }
@@ -65,7 +94,12 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
     case "header":
       if (!block.value.properties) return null;
       return (
-        <h1 className="font-sans text-black text-3xl pt-5 font-bold">
+        <h1
+          className={`font-sans text-black text-3xl pt-5 font-bold ${
+            block.value.format?.block_color &&
+            colorConverter(block.value.format.block_color)
+          }`}
+        >
           <>{decorationsApplyer(block.value.properties.title)}</>
         </h1>
       );

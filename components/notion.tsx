@@ -138,7 +138,7 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
               href="/[url]"
               as={`/${props.block.value.id.replace(/-/g, "")}`}
             >
-              <a className="text-blue-600 font-bold">
+              <a className="text-blue-600 font-bold font-sans">
                 {block.value.properties.title[0][0]}
               </a>
             </Link>

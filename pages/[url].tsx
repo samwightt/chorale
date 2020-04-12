@@ -1,7 +1,8 @@
 import { GetServerSideProps } from "next";
 import { LoadPageChunkData } from "../types/notion";
 import fetch from "isomorphic-unfetch";
-import { NotionRenderer } from "../components/notion";
+import { NotionRenderer, getTitle, getDescription } from "../components/notion";
+import Head from "next/head";
 
 interface HomeProps {
   blocks: LoadPageChunkData["recordMap"]["block"];
@@ -9,16 +10,39 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = (props) => {
+  const pageTitle = getTitle(props.blocks, props.id);
+  const pageDescription = getDescription(props.blocks, props.id);
   return (
-    <div className="container mx-auto">
-      <NotionRenderer level={0} blockMap={props.blocks} currentID={props.id} />
-    </div>
+    <>
+      <Head>
+        <title>{pageTitle}</title>
+        <meta property="og:title" content={pageTitle} />
+        <meta property="twitter:title" content={pageTitle} />
+        <meta property="twitter:site" content="@samwightt" />
+        <meta property="twitter:creator" content="@samwightt" />
+        <meta property="twitter:card" content="summary" />
+        {pageDescription && (
+          <>
+            <meta property="og:description" content={pageDescription} />
+            <meta property="twitter:description" content={pageDescription} />
+            <meta name="description" content={pageDescription} />
+          </>
+        )}
+      </Head>
+      <div className="container mx-auto">
+        <NotionRenderer
+          level={0}
+          blockMap={props.blocks}
+          currentID={props.id}
+        />
+      </div>
+    </>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const id = context.params?.url;
-  let newId = "ef28925f-6389-4c1d-962d-a11c86879897";
+  let newId = "";
   if (id && !Array.isArray(id)) {
     newId = id.split("-")[id.split("-").length - 1];
     newId = `${newId.slice(0, 8)}-${newId.slice(8, 12)}-${newId.slice(

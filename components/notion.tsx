@@ -4,6 +4,7 @@ import {
   ColorType,
   BaseTextValueType,
 } from "../types/notion";
+import Link from "next/link";
 
 interface NotionProps {
   blockMap: LoadPageChunkData["recordMap"]["block"];
@@ -121,6 +122,7 @@ export const decorationsApplyer = (properties: DecorationType[]) => {
 
 interface BlockRenderer {
   block: LoadPageChunkData["recordMap"]["block"][""];
+  level: number;
 }
 
 export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
@@ -129,6 +131,19 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
   switch (block.value.type) {
     case "page":
       if (!block.value.properties) return null;
+      if (props.level > 0)
+        return (
+          <>
+            <Link
+              href="/[url]"
+              as={`/${props.block.value.id.replace(/-/g, "")}`}
+            >
+              <a className="text-blue-600 font-bold">
+                {block.value.properties.title[0][0]}
+              </a>
+            </Link>
+          </>
+        );
       return (
         <>
           <h1 className="font-sans text-black text-5xl font-extrabold text-center">
@@ -218,6 +233,7 @@ export const ChildRenderer: React.FC<ChildRendererProps> = (props) => {
 
   for (let i = 0; i < ids.length; i++) {
     const currentId = ids[i];
+    if (!(currentId in blockMap)) continue;
     const currentBlock = blockMap[currentId];
     if (currentBlock.value.type === "bulleted_list") {
       bulletArray.push(
@@ -308,11 +324,10 @@ export const NotionRenderer: React.FC<NotionProps> = (props) => {
     !currentBlock.value.properties
   )
     return null;
-  if (props.level > 0 && currentBlock.value.type === "page") return null;
 
   return (
     <>
-      <BlockRenderer block={currentBlock} />
+      <BlockRenderer level={props.level} block={currentBlock} />
       {currentBlock.value.content && (
         <ChildRenderer
           level={props.level}

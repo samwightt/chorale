@@ -1,3 +1,6 @@
+/**
+ * Base properties that all blocks share.
+ */
 interface BaseValueType {
   id: string;
   version: number;
@@ -13,6 +16,9 @@ interface BaseValueType {
   content?: string[];
 }
 
+/**
+ * Colors and backgrounds a given block can have in Notion.
+ */
 type ColorType =
   | "gray"
   | "brown"
@@ -61,7 +67,7 @@ type SubDecorationType =
   | PageFormatType;
 type BaseDecorationType = [string];
 type AdditionalDecorationType = [string, SubDecorationType[]];
-type DecorationType = BaseDecorationType | AdditionalDecorationType;
+export type DecorationType = BaseDecorationType | AdditionalDecorationType;
 
 interface PageValueType extends BaseValueType {
   type: "page";
@@ -141,6 +147,26 @@ interface ColumnValueType extends BaseValueType {
   };
 }
 
+interface ImageValueType extends BaseValueType {
+  type: "image";
+  properties: {
+    source: string[][];
+  };
+  format: {
+    block_width: number;
+    block_height: number;
+    display_source: number;
+    block_full_width: boolean;
+    block_page_width: boolean;
+    block_aspect_ratio: number;
+    block_preserve_scale: boolean;
+  };
+  file_ids: string[];
+}
+
+/**
+ * The different block values a block can have.
+ */
 export type BlockValueType =
   | TextValueType
   | PageValueType
@@ -153,7 +179,9 @@ export type BlockValueType =
   | DividerValueType
   | ColumnListValueType
   | ColumnValueType
-  | QuoteValueType;
+  | QuoteValueType
+  | ImageValueType;
+
 export interface BlockType {
   role: string;
   value: BlockValueType;

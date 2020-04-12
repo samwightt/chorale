@@ -1,4 +1,4 @@
-import { LoadPageChunkData } from "../types/notion";
+import { LoadPageChunkData, DecorationType } from "../types/notion";
 
 interface NotionProps {
   blockMap: LoadPageChunkData["recordMap"]["block"];
@@ -6,11 +6,11 @@ interface NotionProps {
   level: number;
 }
 
-export const decorationsApplyer = (properties: any[]) => {
+export const decorationsApplyer = (properties: DecorationType[]) => {
   return properties.map((item, index) => {
-    let newItem: any = item[0];
-    if (item.length > 1) {
-      item[1].forEach((item: any) => {
+    let newItem: JSX.Element = <>{item[0]}</>;
+    if (item.length !== 1) {
+      item[1].forEach((item) => {
         switch (item[0]) {
           case "b":
             newItem = <b key={index}>{newItem}</b>;
@@ -47,34 +47,41 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
 
   switch (block.value.type) {
     case "page":
+      if (!block.value.properties) return null;
       return (
-        <h1 className="font-serif text-black text-5xl font-bold text-center">
-          {block.value.properties.title[0][0]}
-        </h1>
+        <>
+          <h1 className="font-sans text-black text-5xl font-extrabold text-center">
+            {block.value.properties.title[0][0]}
+          </h1>
+        </>
       );
     case "header":
+      if (!block.value.properties) return null;
       return (
-        <h1 className="font-serif text-black text-3xl pt-5 font-bold">
+        <h1 className="font-sans text-black text-3xl pt-5 font-bold">
           <>{decorationsApplyer(block.value.properties.title)}</>
         </h1>
       );
     case "sub_header":
+      if (!block.value.properties) return null;
       return (
-        <h2 className="font-serif text-black text-2xl pt-4 font-medium font-bold">
+        <h2 className="font-sans text-black text-2xl pt-4 font-medium font-bold">
           <>{decorationsApplyer(block.value.properties.title)}</>
         </h2>
       );
     case "sub_sub_header":
+      if (!block.value.properties) return null;
       return (
-        <h3 className="font-serif text-black text-xl font-medium font-bold pt-3">
+        <h3 className="font-sans text-black text-xl font-medium font-bold pt-3">
           <>{decorationsApplyer(block.value.properties.title)}</>
         </h3>
       );
     case "column_list":
       return null;
     case "quote":
+      if (!block.value.properties) return null;
       return (
-        <blockquote className="font-serif text-black text-xl font-medium border-l-2 border-black pl-2 whitespace-pre-wrap">
+        <blockquote className="font-sans text-black text-xl font-medium border-l-2 border-black pl-2 whitespace-pre-wrap">
           <>{decorationsApplyer(block.value.properties.title)}</>
         </blockquote>
       );
@@ -83,6 +90,7 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
     case "divider":
       return <div className="w-full border-b border-black"></div>;
     case "text":
+      if (!block.value.properties) return null;
       return (
         <p className="text-md leading-normal text-black text-md font-sans whitespace-pre-wrap">
           <>{decorationsApplyer(block.value.properties.title)}</>
@@ -90,10 +98,19 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
       );
     case "bulleted_list":
     case "numbered_list":
+      if (!block.value.properties) return null;
       return (
         <li className="mt-2 leading-normal text-black text-md font-sans whitespace-pre-wrap">
           <>{decorationsApplyer(block.value.properties.title)}</>
         </li>
+      );
+    case "image":
+      return (
+        <img
+          src={`https://notion.so/image/${encodeURIComponent(
+            block.value.properties.source[0][0]
+          )}`}
+        />
       );
     default:
       return <div />;

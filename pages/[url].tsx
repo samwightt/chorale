@@ -17,9 +17,9 @@ const Home: React.FC<HomeProps> = (props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const id = context.params.url;
+  const id = context.params?.url;
   let newId = "ef28925f-6389-4c1d-962d-a11c86879897";
-  if (!Array.isArray(id)) {
+  if (id && !Array.isArray(id)) {
     newId = id.split("-")[id.split("-").length - 1];
     newId = `${newId.slice(0, 8)}-${newId.slice(8, 12)}-${newId.slice(
       12,

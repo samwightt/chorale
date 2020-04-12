@@ -29,7 +29,14 @@ export const decorationsApplyer = (properties: DecorationType[]) => {
             );
             break;
           case "c":
-            newItem = <code key={index}>{newItem}</code>;
+            newItem = (
+              <code
+                className="bg-gray-300 text-gray-800 rounded text-sm py-1 px-1 font-mono"
+                key={index}
+              >
+                {newItem}
+              </code>
+            );
             break;
         }
       });

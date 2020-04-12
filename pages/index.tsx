@@ -1,21 +1,47 @@
 import { GetServerSideProps } from "next";
 import { LoadPageChunkData } from "../types/notion";
 import fetch from "isomorphic-unfetch";
-import { NotionRenderer } from "../components/notion";
+import { NotionRenderer, getTitle, getDescription } from "../components/notion";
+import Head from "next/head";
 
 interface HomeProps {
   blocks: LoadPageChunkData["recordMap"]["block"];
 }
 
 const Home: React.FC<HomeProps> = (props) => {
+  const pageTitle = getTitle(
+    props.blocks,
+    "ef28925f-6389-4c1d-962d-a11c86879897"
+  );
+  const pageDescription = getDescription(
+    props.blocks,
+    "ef28925f-6389-4c1d-962d-a11c86879897"
+  );
+
   return (
-    <div className="container mx-auto max-w-4xl">
-      <NotionRenderer
-        level={0}
-        blockMap={props.blocks}
-        currentID="ef28925f-6389-4c1d-962d-a11c86879897"
-      />
-    </div>
+    <>
+      <Head>
+        <title>{pageTitle}</title>
+        <meta property="og:title" content={pageTitle} />
+        <meta property="twitter:title" content={pageTitle} />
+        <meta property="twitter:site" content="@samwightt" />
+        <meta property="twitter:creator" content="@samwightt" />
+        {pageDescription && (
+          <>
+            <meta property="og:description" content={pageDescription} />
+            <meta property="twitter:description" content={pageDescription} />
+            <meta name="description" content={pageDescription} />
+          </>
+        )}
+      </Head>
+      <div className="container mx-auto max-w-4xl">
+        <NotionRenderer
+          level={0}
+          blockMap={props.blocks}
+          currentID="ef28925f-6389-4c1d-962d-a11c86879897"
+        />
+      </div>
+    </>
   );
 };
 

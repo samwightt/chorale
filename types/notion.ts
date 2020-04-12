@@ -87,7 +87,7 @@ interface PageValueType extends BaseValueType {
   file_ids?: string[];
 }
 
-interface BaseTextValueType extends BaseValueType {
+export interface BaseTextValueType extends BaseValueType {
   properties?: {
     title: DecorationType[];
   };

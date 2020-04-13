@@ -11,7 +11,7 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = (props) => {
   const pageTitle = getTitle(props.blocks, props.id);
-  const pageDescription = getDescription(props.blocks, props.id);
+  const pageDescription = getDescription(props.blocks, props.id, 0);
   return (
     <>
       <Head>

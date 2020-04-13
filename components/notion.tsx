@@ -28,7 +28,8 @@ export const getTitle = (
 
 export const getDescription = (
   blockMap: LoadPageChunkData["recordMap"]["block"],
-  id: string
+  id: string,
+  level: number
 ): string | false => {
   const currentBlock = blockMap[id];
   const type = currentBlock.value.type;
@@ -42,9 +43,17 @@ export const getDescription = (
     if (value.properties?.title) return getTextContent(value.properties.title);
   }
 
-  if (currentBlock.value.content && currentBlock.value.content.length > 0) {
+  if (
+    currentBlock.value.content &&
+    currentBlock.value.content.length > 0 &&
+    !(currentBlock.value.type === "page" && level > 0)
+  ) {
     for (let i = 0; i < currentBlock.value.content.length; i++) {
-      const value = getDescription(blockMap, currentBlock.value.content[i]);
+      const value = getDescription(
+        blockMap,
+        currentBlock.value.content[i],
+        level + 1
+      );
       if (value) return value;
     }
   }
@@ -325,10 +334,14 @@ export const NotionRenderer: React.FC<NotionProps> = (props) => {
   )
     return null;
 
+  const renderChildren = !(
+    currentBlock.value.type === "page" && props.level > 0
+  );
+
   return (
     <>
       <BlockRenderer level={props.level} block={currentBlock} />
-      {currentBlock.value.content && (
+      {currentBlock.value.content && renderChildren && (
         <ChildRenderer
           level={props.level}
           ids={currentBlock.value.content}

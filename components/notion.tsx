@@ -61,26 +61,48 @@ export const getDescription = (
   return false;
 };
 
-const colorConverter = (color: ColorType) => {
+const colorConverter = (color: ColorType, isBlock: boolean) => {
+  const bgStyle = isBlock
+    ? "text-white py-1 px-2 rounded"
+    : "text-white py-1 px-1 rounded";
+
   switch (color) {
     case "blue":
-      return "text-blue-600";
+      return "text-blue-600 border-blue-600";
     case "brown":
-      return "text-orange-900";
+      return "text-orange-900 border-orange-900";
     case "gray":
-      return "text-gray-500";
+      return "text-gray-500 border-gray-500";
     case "orange":
-      return "text-orange-600";
+      return "text-orange-600 border-orange-600";
     case "pink":
-      return "text-pink-600";
+      return "text-pink-600 border-pink-600";
     case "purple":
-      return "text-purple-600";
+      return "text-purple-600 border-purple-600";
     case "red":
-      return "text-red-600";
+      return "text-red-600 border-red-600";
     case "teal":
-      return "text-teal-600";
+      return "text-green-600 border-teal-600";
     case "yellow":
-      return "text-yellow-600";
+      return "text-yellow-600 border-yellow-600";
+    case "blue_background":
+      return "bg-blue-600 border-blue-600 " + bgStyle;
+    case "brown_background":
+      return "bg-orange-900 border-orange-900 " + bgStyle;
+    case "gray_background":
+      return "bg-gray-600 border-gray-500 " + bgStyle;
+    case "orange_background":
+      return "bg-orange-600 border-orange-600 " + bgStyle;
+    case "pink_background":
+      return "bg-pink-500 border-pink-600 " + bgStyle;
+    case "purple_background":
+      return "bg-purple-700 border-purple-600 " + bgStyle;
+    case "red_background":
+      return "bg-red-600 border-red-600 " + bgStyle;
+    case "teal_background":
+      return "bg-green-600 border-teal-600 " + bgStyle;
+    case "yellow_background":
+      return "bg-yellow-500 border-yellow-600 " + bgStyle;
     default:
       return "";
   }
@@ -120,7 +142,7 @@ export const decorationsApplyer = (properties: DecorationType[]) => {
             break;
           case "h":
             newItem = (
-              <span className={colorConverter(item[1])}>{newItem}</span>
+              <span className={colorConverter(item[1], false)}>{newItem}</span>
             );
         }
       });
@@ -166,7 +188,7 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
         <h1
           className={`font-sans text-black text-3xl pt-5 font-bold ${
             block.value.format?.block_color &&
-            colorConverter(block.value.format.block_color)
+            colorConverter(block.value.format.block_color, true)
           }`}
         >
           <>{decorationsApplyer(block.value.properties.title)}</>
@@ -191,7 +213,12 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
     case "quote":
       if (!block.value.properties) return null;
       return (
-        <blockquote className="font-sans text-black text-xl font-medium border-l-2 border-black pl-2 whitespace-pre-wrap">
+        <blockquote
+          className={`font-sans text-black text-xl font-medium border-l-2 border-black pl-2 whitespace-pre-wrap ${
+            block.value.format?.block_color &&
+            colorConverter(block.value.format.block_color, true)
+          }`}
+        >
           <>{decorationsApplyer(block.value.properties.title)}</>
         </blockquote>
       );
@@ -207,7 +234,7 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
         <p
           className={`text-md leading-normal text-black text-md font-sans whitespace-pre-wrap ${
             block.value.format?.block_color &&
-            colorConverter(block.value.format.block_color)
+            colorConverter(block.value.format.block_color, true)
           }`}
         >
           <>{decorationsApplyer(block.value.properties.title)}</>

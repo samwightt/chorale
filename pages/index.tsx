@@ -15,7 +15,8 @@ const Home: React.FC<HomeProps> = (props) => {
   );
   const pageDescription = getDescription(
     props.blocks,
-    "ef28925f-6389-4c1d-962d-a11c86879897"
+    "ef28925f-6389-4c1d-962d-a11c86879897",
+    0
   );
 
   return (

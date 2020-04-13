@@ -11,7 +11,7 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = (props) => {
   const pageTitle = getTitle(props.blocks, props.id);
-  const pageDescription = getDescription(props.blocks, props.id);
+  const pageDescription = getDescription(props.blocks, props.id, 0);
   return (
     <>
       <Head>
@@ -29,7 +29,7 @@ const Home: React.FC<HomeProps> = (props) => {
           </>
         )}
       </Head>
-      <div className="container mx-auto">
+      <div className="container mx-auto max-w-4xl">
         <NotionRenderer
           level={0}
           blockMap={props.blocks}

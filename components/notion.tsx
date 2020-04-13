@@ -28,7 +28,8 @@ export const getTitle = (
 
 export const getDescription = (
   blockMap: LoadPageChunkData["recordMap"]["block"],
-  id: string
+  id: string,
+  level: number
 ): string | false => {
   const currentBlock = blockMap[id];
   const type = currentBlock.value.type;
@@ -42,9 +43,17 @@ export const getDescription = (
     if (value.properties?.title) return getTextContent(value.properties.title);
   }
 
-  if (currentBlock.value.content && currentBlock.value.content.length > 0) {
+  if (
+    currentBlock.value.content &&
+    currentBlock.value.content.length > 0 &&
+    !(currentBlock.value.type === "page" && level > 0)
+  ) {
     for (let i = 0; i < currentBlock.value.content.length; i++) {
-      const value = getDescription(blockMap, currentBlock.value.content[i]);
+      const value = getDescription(
+        blockMap,
+        currentBlock.value.content[i],
+        level + 1
+      );
       if (value) return value;
     }
   }
@@ -59,7 +68,7 @@ const colorConverter = (color: ColorType) => {
     case "brown":
       return "text-orange-900";
     case "gray":
-      return "text-gray-600";
+      return "text-gray-500";
     case "orange":
       return "text-orange-600";
     case "pink":
@@ -146,7 +155,7 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
         );
       return (
         <>
-          <h1 className="font-sans text-black text-5xl font-extrabold text-center">
+          <h1 className="font-sans text-black text-4xl font-extrabold mx-4 mt-20 mb-10">
             {block.value.properties.title[0][0]}
           </h1>
         </>
@@ -191,9 +200,16 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
     case "divider":
       return <div className="w-full border-b border-black"></div>;
     case "text":
-      if (!block.value.properties) return null;
+      if (!block.value.properties) {
+        return <p className="h-4"> </p>;
+      }
       return (
-        <p className="text-md leading-normal text-black text-md font-sans whitespace-pre-wrap">
+        <p
+          className={`text-md leading-normal text-black text-md font-sans whitespace-pre-wrap ${
+            block.value.format?.block_color &&
+            colorConverter(block.value.format.block_color)
+          }`}
+        >
           <>{decorationsApplyer(block.value.properties.title)}</>
         </p>
       );
@@ -317,18 +333,22 @@ export const ChildRenderer: React.FC<ChildRendererProps> = (props) => {
 
 export const NotionRenderer: React.FC<NotionProps> = (props) => {
   const currentBlock = props.blockMap[props.currentID];
-  if (
-    (currentBlock.value.type === "header" ||
-      currentBlock.value.type === "text" ||
-      currentBlock.value.type === "bulleted_list") &&
-    !currentBlock.value.properties
-  )
-    return null;
+  // if (
+  //   (currentBlock.value.type === "header" ||
+  //     currentBlock.value.type === "text" ||
+  //     currentBlock.value.type === "bulleted_list") &&
+  //   !currentBlock.value.properties
+  // )
+  //   return null;
+
+  const renderChildren = !(
+    currentBlock.value.type === "page" && props.level > 0
+  );
 
   return (
     <>
       <BlockRenderer level={props.level} block={currentBlock} />
-      {currentBlock.value.content && (
+      {currentBlock.value.content && renderChildren && (
         <ChildRenderer
           level={props.level}
           ids={currentBlock.value.content}

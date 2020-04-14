@@ -1,4 +1,9 @@
 /**
+ * Chorale: A blazing fast Notion page renderer.
+ * Copyright (C) 2020 Sam Wight
+ */
+
+/**
  * Base properties that all blocks share.
  */
 interface BaseValueType {

@@ -1,3 +1,7 @@
+/**
+ * Chorale: A blazing fast Notion page renderer.
+ * Copyright (C) 2020 Sam Wight
+ */
 import { GetServerSideProps } from "next";
 import { LoadPageChunkData } from "../types/notion";
 import fetch from "isomorphic-unfetch";

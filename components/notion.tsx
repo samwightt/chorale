@@ -63,8 +63,8 @@ export const getDescription = (
 
 const colorConverter = (color: ColorType, isBlock: boolean) => {
   const bgStyle = isBlock
-    ? "text-white py-1 px-2 rounded"
-    : "text-white py-1 px-1 rounded";
+    ? "text-black py-1 px-2 rounded"
+    : "text-black py-1 px-1 rounded";
 
   switch (color) {
     case "blue":
@@ -86,23 +86,23 @@ const colorConverter = (color: ColorType, isBlock: boolean) => {
     case "yellow":
       return "text-yellow-600 border-yellow-600";
     case "blue_background":
-      return "bg-blue-600 border-blue-600 " + bgStyle;
+      return "bg-blue-300 border-blue-600 " + bgStyle;
     case "brown_background":
-      return "bg-orange-900 border-orange-900 " + bgStyle;
+      return "";
     case "gray_background":
-      return "bg-gray-600 border-gray-500 " + bgStyle;
+      return "bg-gray-300 border-gray-500 " + bgStyle;
     case "orange_background":
-      return "bg-orange-600 border-orange-600 " + bgStyle;
+      return "bg-orange-300 border-orange-600 " + bgStyle;
     case "pink_background":
-      return "bg-pink-500 border-pink-600 " + bgStyle;
+      return "bg-pink-300 border-pink-600 " + bgStyle;
     case "purple_background":
-      return "bg-purple-700 border-purple-600 " + bgStyle;
+      return "bg-purple-300 border-purple-600 " + bgStyle;
     case "red_background":
-      return "bg-red-600 border-red-600 " + bgStyle;
+      return "bg-red-300 border-red-600 " + bgStyle;
     case "teal_background":
-      return "bg-green-600 border-teal-600 " + bgStyle;
+      return "bg-green-300 border-teal-600 " + bgStyle;
     case "yellow_background":
-      return "bg-yellow-500 border-yellow-600 " + bgStyle;
+      return "bg-yellow-300 border-yellow-600 " + bgStyle;
     default:
       return "";
   }
@@ -197,14 +197,24 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
     case "sub_header":
       if (!block.value.properties) return null;
       return (
-        <h2 className="font-sans text-black text-2xl pt-4 font-medium font-bold">
+        <h2
+          className={`font-sans text-black text-2xl pt-4 font-medium font-bold ${
+            block.value.format?.block_color &&
+            colorConverter(block.value.format.block_color, true)
+          }`}
+        >
           <>{decorationsApplyer(block.value.properties.title)}</>
         </h2>
       );
     case "sub_sub_header":
       if (!block.value.properties) return null;
       return (
-        <h3 className="font-sans text-black text-xl font-medium font-bold pt-3">
+        <h3
+          className={`font-sans text-black text-xl font-medium font-bold pt-3 ${
+            block.value.format?.block_color &&
+            colorConverter(block.value.format.block_color, true)
+          }`}
+        >
           <>{decorationsApplyer(block.value.properties.title)}</>
         </h3>
       );
@@ -244,7 +254,12 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
     case "numbered_list":
       if (!block.value.properties) return null;
       return (
-        <li className="mt-2 leading-normal text-black text-md font-sans whitespace-pre-wrap">
+        <li
+          className={`mt-2 leading-normal text-black text-md font-sans whitespace-pre-wrap ${
+            block.value.format?.block_color &&
+            colorConverter(block.value.format.block_color, true)
+          }`}
+        >
           <>{decorationsApplyer(block.value.properties.title)}</>
         </li>
       );

@@ -2,6 +2,7 @@
  * Chorale: A blazing fast Notion page renderer.
  * Copyright (C) 2020 Sam Wight
  */
+import React, { useState, useEffect } from "react";
 import { GetServerSideProps } from "next";
 import { LoadPageChunkData } from "../types/notion";
 import fetch from "isomorphic-unfetch";
@@ -9,13 +10,23 @@ import { NotionRenderer, getTitle, getDescription } from "../components/notion";
 import Head from "next/head";
 
 interface HomeProps {
-  blocks: LoadPageChunkData["recordMap"]["block"];
+  data: LoadPageChunkData;
   id: string;
 }
 
 const Home: React.FC<HomeProps> = (props) => {
-  const pageTitle = getTitle(props.blocks, props.id);
-  const pageDescription = getDescription(props.blocks, props.id, 0);
+  const [data, setData] = useState(props.data);
+
+  useEffect(() => {
+    if (data.cursor.stack.length < 1) {
+      console.log("There's still more to fetch!");
+    }
+  }, [data]);
+
+  const { recordMap } = data;
+
+  const pageTitle = getTitle(recordMap.block, props.id);
+  const pageDescription = getDescription(recordMap.block, props.id, 0);
   return (
     <>
       <Head>
@@ -36,7 +47,7 @@ const Home: React.FC<HomeProps> = (props) => {
       <div className="container mx-auto max-w-4xl">
         <NotionRenderer
           level={0}
-          blockMap={props.blocks}
+          blockMap={recordMap.block}
           currentID={props.id}
         />
       </div>
@@ -78,12 +89,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const data: LoadPageChunkData = await res.json();
 
-  console.log(data);
-  console.log(newId);
-
   return {
     props: {
-      blocks: data.recordMap.block,
+      data,
       id: newId,
     },
   };

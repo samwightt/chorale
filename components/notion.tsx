@@ -20,8 +20,10 @@ import {
   DecorationType,
   ColorType,
   BaseTextValueType,
+  ImageValueType,
 } from "../types/notion";
 import Link from "next/link";
+import LazyLoad from "react-lazyload";
 
 interface NotionProps {
   blockMap: LoadPageChunkData["recordMap"]["block"];
@@ -281,12 +283,34 @@ export const BlockRenderer: React.FC<BlockRenderer> = (props) => {
         </li>
       );
     case "image":
+      console.log(
+        block.value.format.block_aspect_ratio * block.value.format.block_width
+      );
+      const height =
+        block.value.format.block_aspect_ratio * block.value.format.block_width;
       return (
-        <img
-          src={`https://notion.so/image/${encodeURIComponent(
-            block.value.properties.source[0][0]
-          )}`}
-        />
+        <div
+          className="w-full"
+          style={{
+            paddingBottom: `${block.value.format.block_aspect_ratio * 100}%`,
+            position: "relative",
+          }}
+        >
+          <LazyLoad
+            height={
+              block.value.format.block_aspect_ratio *
+              block.value.format.block_width
+            }
+            once
+          >
+            <img
+              src={`https://notion.so/image/${encodeURIComponent(
+                block.value.properties.source[0][0]
+              )}`}
+              className="w-full h-auto absolute"
+            />
+          </LazyLoad>
+        </div>
       );
     default:
       return <div />;

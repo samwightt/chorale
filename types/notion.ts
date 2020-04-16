@@ -156,6 +156,7 @@ export interface ImageValueType extends BaseValueType {
   type: "image";
   properties: {
     source: string[][];
+    caption?: string[][];
   };
   format: {
     block_width: number;

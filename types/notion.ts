@@ -152,10 +152,11 @@ interface ColumnValueType extends BaseValueType {
   };
 }
 
-interface ImageValueType extends BaseValueType {
+export interface ImageValueType extends BaseValueType {
   type: "image";
   properties: {
     source: string[][];
+    caption?: string[][];
   };
   format: {
     block_width: number;

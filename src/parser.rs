@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Serialize, Deserialize, Serializer, Deserializer};
 use serde_json::{Value};
 use std::collections::HashMap;
 use anyhow::Result;
@@ -77,7 +77,12 @@ pub struct FigmaProperties {
 
 #[derive(Serialize, Deserialize)]
 pub struct FigmaFormat {
-    block_height: Option<i64>
+    pub block_height: Option<i64>
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct TextProperties {
+    pub title: Vec<FormattedText>
 }
 
 #[derive(Serialize, Deserialize)]
@@ -85,7 +90,8 @@ pub struct FigmaFormat {
 pub enum RootBlockType {
     Text { 
         #[serde(flatten)]
-        data: BaseValueType
+        data: BaseValueType,
+        properties: Option<TextProperties>
     },
     BulletedList {
         #[serde(flatten)]
@@ -173,20 +179,103 @@ pub enum ColorType {
     RedBackground
 }
 
-pub enum FormatType {
+
+
+#[derive(Copy, Clone)]
+pub enum NoContextFormat {
     Bold,
     Italic,
-    Strike,
-    Code,
-    Link,
-    Color,
-    Date
+    None
+}
+
+impl Serialize for NoContextFormat {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
+        serializer.serialize_str(match *self {
+            NoContextFormat::Bold => "b",
+            NoContextFormat::Italic => "i",
+            NoContextFormat::None => ""
+        })
+    }
+}
+
+impl<'de> Deserialize<'de> for NoContextFormat {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: Deserializer<'de> {
+        let s = String::deserialize(deserializer)?;
+        match s.as_str() {
+            "i" => Ok(NoContextFormat::Italic),
+            "b" => Ok(NoContextFormat::Bold),
+            _ => Ok(NoContextFormat::None)
+        }
+    }
+}
+
+#[derive(Deserialize, Serialize)]
+#[serde(untagged)]
+enum IntermediaryFormatEnum {
+    Main(Either<[NoContextFormat; 1], (String, String)>)
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(from = "IntermediaryFormatEnum")]
+enum FormatType {
+    NoContext(NoContextFormat),
+    Context(String, String)
+}
+
+impl From<IntermediaryFormatEnum> for FormatType {
+    fn from(t: IntermediaryFormatEnum) -> Self {
+        let IntermediaryFormatEnum::Main(s) = t;
+        match s {
+            Either::Left(l) => FormatType::NoContext(l[0]),
+            Either::Right((l, r)) => FormatType::Context(l, r)
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(untagged)]
+enum IntermediaryFormattingRepresentation {
+    Main(Either<Vec<String>, (String, Vec<Vec<String>>)>)
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(from = "IntermediaryFormattingRepresentation")]
+pub struct FormattedText {
+    text: String,
+    formatting: Option<Vec<Vec<String>>>
+}
+
+impl From<IntermediaryFormattingRepresentation> for FormattedText {
+    fn from(text: IntermediaryFormattingRepresentation) -> Self {
+        let IntermediaryFormattingRepresentation::Main(s) = text;
+        match s {
+            Either::Left(r) => {
+                FormattedText {
+                    text: r[0].clone(),
+                    formatting: None
+                }
+            }
+            Either::Right((text, format)) => {
+                FormattedText {
+                    text,
+                    formatting: Some(format)
+                }
+            }
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum Either<L, R> {
+    Left(L),
+    Right(R)
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct BlockType {
     pub role: String,
-    pub value: RootBlockType
+    pub value: Either<RootBlockType, Value>
 }
 
 #[derive(Serialize, Deserialize)]

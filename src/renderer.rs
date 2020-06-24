@@ -8,7 +8,7 @@ type Accumulator<'a> = (Vec<Markup>, Vec<&'a BaseValueType>);
 
 pub fn needs_grouping(value: &RootBlockType) -> bool {
     match value {
-        RootBlockType::BulletedList |
+        RootBlockType::BulletedList {properties: _} |
         RootBlockType::NumberedList => true,
         _ => false
     }
@@ -19,7 +19,7 @@ pub fn can_be_grouped<'a>(value: &RootBlockType, vector: &Vec<&'a BaseValueType>
     else {
         let first = &vector[0];
         match (&first.block, value) {
-            (RootBlockType::BulletedList, RootBlockType::BulletedList) |
+            (RootBlockType::BulletedList { properties: _}, RootBlockType::BulletedList { properties: _}) |
             (RootBlockType::NumberedList, RootBlockType::NumberedList) => true,
             _ => false
         }
@@ -29,18 +29,17 @@ pub fn can_be_grouped<'a>(value: &RootBlockType, vector: &Vec<&'a BaseValueType>
 pub fn render_wrapper<'a>(vector: &'a Vec<&'a BaseValueType>, blocks: &BlockTableType) -> Markup {
     if vector.len() == 0 { return html! {} }
     let first = vector[0];
+    println!("This is being called!");
     match first.block {
         RootBlockType::NumberedList |
-        RootBlockType::BulletedList => {
+        RootBlockType::BulletedList {properties: _} => {
             html! {
                 ul {
                     @for item in vector.iter() {
-                        li {
-                            (match render(&item.id, &blocks) {
-                                Ok(a) => a,
-                                Err(_) => html! {}
-                            })
-                        }
+                        (match render(&item.id, &blocks) {
+                            Ok(a) => a,
+                            Err(_) => html! {}
+                        })
                     }
                 }
             }
@@ -62,8 +61,10 @@ pub fn render_children<'a>(ids: &Vec<String>, blocks: &BlockTableType) -> Result
                     return (a, b);
                 }
                 else if needs_grouping(&result.block) {
+                    b.push(&result);
                     let result = render_wrapper(&b, &blocks);
                     a.push(result);
+                    println!("Grouping is working!!");
                     return (a, vec![]);
                 }
                 else {
@@ -127,7 +128,7 @@ pub fn render_text(text: &Vec<FormattedText>) -> Markup {
     })
 }
 
-pub fn render_page(properties: &PageProperties) -> Markup {
+fn render_page(properties: &PageProperties) -> Markup {
     html! {
         h1 {
             (render_text(&properties.title))
@@ -135,18 +136,32 @@ pub fn render_page(properties: &PageProperties) -> Markup {
     }
 }
 
-pub fn render_text_block(properties: &TextProperties) -> Markup {
+fn render_text_block(properties: &Option<TextProperties>) -> Markup {
     html! {
         p {
-            (render_text(&properties.title))
+            @if let Some(properties) = properties {
+                (render_text(&properties.title))
+            }
+        }
+    }
+}
+
+fn render_bulleted_list(properties: &Option<TextProperties>) -> Markup {
+    println!("This works!");
+    html! { 
+        li {
+            @if let Some(properties) = properties {
+                (render_text(&properties.title))
+            }
         }
     }
 }
 
 fn render_block(block: &RootBlockType) -> Markup {
     match block {
-        RootBlockType::Page {format, file_ids, properties } => render_page(properties),
+        RootBlockType::Page {format: _, file_ids: _, properties } => render_page(properties),
         RootBlockType::Text {properties} => render_text_block(properties),
+        RootBlockType::BulletedList {properties} => render_bulleted_list(properties),
         _ => html! {
             h1 {
                 "Could not render!"
@@ -168,19 +183,15 @@ pub fn render(id: &String, blocks: &BlockTableType) -> Result<Markup> {
             if let Some(children) = &value.content {
                 let children = render_children(&children, &blocks);
                 return Ok(html! {
-                    div {
-                        (render_block(&value.block))
-                        @if let Ok(children) = children {
-                            (children)
-                        }
+                    (render_block(&value.block))
+                    @if let Ok(children) = children {
+                        (children)
                     }
                 });
             }
             else {
                 return Ok(html! {
-                    div {
-                        (render_block(&value.block))
-                    }
+                    (render_block(&value.block))
                 });
             }
         }

@@ -76,9 +76,11 @@ pub struct PageProperties{
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum RootBlockType {
     Text { 
-        properties: TextProperties
+        properties: Option<TextProperties>
     },
-    BulletedList,
+    BulletedList {
+        properties: Option<TextProperties>
+    },
     NumberedList,
     Header,
     SubHeader,

@@ -1,0 +1,893 @@
+{
+    "recordMap": {
+      "block": {
+        "ef28925f-6389-4c1d-962d-a11c86879897": {
+          "role": "reader",
+          "value": {
+            "id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "version": 863,
+            "type": "page",
+            "properties": {
+              "title": [
+                [
+                  "Chorale"
+                ]
+              ]
+            },
+            "content": [
+              "895f9849-9b9c-43b2-8ac3-c708985beec2",
+              "6af4b5e8-1b5a-4091-a20e-d52f6eca620b",
+              "c44513dc-455f-4e30-90de-0aa050cca0b4",
+              "8efa306d-fe9d-4d9d-b033-85904c173564",
+              "14b5f32d-62b7-4eb1-b20a-711b162528f7",
+              "07e451cc-cb66-4b84-99bc-e0a3e103639b",
+              "498174ff-35ca-4069-a9ac-6ca2bfa0c4ee",
+              "fe2afbe1-eb16-44e2-84e1-02f26a9f94cb",
+              "f1b3bcc7-0fd3-459f-b6a6-15592d77790b",
+              "dd6f882e-1681-4a2a-a405-2147c1dc153c",
+              "ed8ceb40-fed6-4c0f-a992-c406512e09e0",
+              "523e889a-3ad5-462b-9482-0e1900bdedd1",
+              "96b07225-88f1-42f7-a179-e1e0d4949520",
+              "4d272e8f-6a94-4545-ad2c-28b346c8cf33",
+              "0f97390d-ed07-4aac-a817-48e60072dcc8",
+              "5b0f4cc2-00bd-4f5b-9c6b-5edebc37943c",
+              "c68cd695-5029-42a3-ae35-a3ee0a4f4fff",
+              "5bfe1bb2-77f2-4e85-811a-da273600f96d",
+              "5b4e787d-760a-419d-8341-cbde3ef991f3"
+            ],
+            "format": {
+              "page_cover": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb",
+              "block_locked": false,
+              "block_locked_by": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+              "page_full_width": false,
+              "page_small_text": false,
+              "page_cover_position": 0.5
+            },
+            "permissions": [
+              {
+                "role": "reader",
+                "type": "public_permission",
+                "allow_search_engine_indexing": true
+              }
+            ],
+            "created_time": 1586546409220,
+            "last_edited_time": 1586839380000,
+            "parent_id": "5ef9648e-49b7-4263-bd2a-47afa1bc09b8",
+            "parent_table": "block",
+            "alive": true,
+            "file_ids": [
+              "48d1cff6-3058-4db6-848a-d3ece114dde7"
+            ],
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "895f9849-9b9c-43b2-8ac3-c708985beec2": {
+          "role": "reader",
+          "value": {
+            "id": "895f9849-9b9c-43b2-8ac3-c708985beec2",
+            "version": 190,
+            "type": "text",
+            "properties": {
+              "title": [
+                [
+                  "A custom Notion page renderer built for speed and ease of use."
+                ]
+              ]
+            },
+            "created_time": 1586839320000,
+            "last_edited_time": 1586839380000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "6af4b5e8-1b5a-4091-a20e-d52f6eca620b": {
+          "role": "reader",
+          "value": {
+            "id": "6af4b5e8-1b5a-4091-a20e-d52f6eca620b",
+            "version": 17,
+            "type": "text",
+            "created_time": 1586839380000,
+            "last_edited_time": 1586839380000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "c44513dc-455f-4e30-90de-0aa050cca0b4": {
+          "role": "reader",
+          "value": {
+            "id": "c44513dc-455f-4e30-90de-0aa050cca0b4",
+            "version": 129,
+            "type": "quote",
+            "properties": {
+              "title": [
+                [
+                  "We have a mailing list now! "
+                ],
+                [
+                  "Sign up for Chorale Weekly here!",
+                  [
+                    [
+                      "a",
+                      "http://eepurl.com/gZC3av"
+                    ],
+                    [
+                      "h",
+                      "blue"
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "created_time": 1586722020000,
+            "last_edited_time": 1586818260000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "8efa306d-fe9d-4d9d-b033-85904c173564": {
+          "role": "reader",
+          "value": {
+            "id": "8efa306d-fe9d-4d9d-b033-85904c173564",
+            "version": 301,
+            "type": "text",
+            "created_time": 1586755560000,
+            "last_edited_time": 1586755560000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "14b5f32d-62b7-4eb1-b20a-711b162528f7": {
+          "role": "reader",
+          "value": {
+            "id": "14b5f32d-62b7-4eb1-b20a-711b162528f7",
+            "version": 33,
+            "type": "text",
+            "properties": {
+              "title": [
+                [
+                  "Chorale is a custom Notion renderer that makes it easy to share public Notion articles that look good and load "
+                ],
+                [
+                  "extremely",
+                  [
+                    [
+                      "i"
+                    ]
+                  ]
+                ],
+                [
+                  " fast. It doesn't re-use any Notion code to achieve maximum performance."
+                ]
+              ]
+            },
+            "created_time": 1586670240000,
+            "last_edited_time": 1586814360000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "07e451cc-cb66-4b84-99bc-e0a3e103639b": {
+          "role": "reader",
+          "value": {
+            "id": "07e451cc-cb66-4b84-99bc-e0a3e103639b",
+            "version": 330,
+            "type": "text",
+            "properties": {
+              "title": [
+                [
+                  "Chorale is built using Next.JS and hosted on Zeit Now. A few details:"
+                ]
+              ]
+            },
+            "created_time": 1586670060000,
+            "last_edited_time": 1586671380000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "498174ff-35ca-4069-a9ac-6ca2bfa0c4ee": {
+          "role": "reader",
+          "value": {
+            "id": "498174ff-35ca-4069-a9ac-6ca2bfa0c4ee",
+            "version": 227,
+            "type": "numbered_list",
+            "properties": {
+              "title": [
+                [
+                  "Chorale is faster than vanilla Notion.",
+                  [
+                    [
+                      "b"
+                    ]
+                  ]
+                ],
+                [
+                  " Chorale renders pages 2 to 7 times faster than a regular Public Notion page. Check out the example below!"
+                ]
+              ]
+            },
+            "created_time": 1586670300000,
+            "last_edited_time": 1586822940000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "fe2afbe1-eb16-44e2-84e1-02f26a9f94cb": {
+          "role": "reader",
+          "value": {
+            "id": "fe2afbe1-eb16-44e2-84e1-02f26a9f94cb",
+            "version": 205,
+            "type": "numbered_list",
+            "properties": {
+              "title": [
+                [
+                  "Chorale allows custom domain support.",
+                  [
+                    [
+                      "b"
+                    ]
+                  ]
+                ],
+                [
+                  " If you host Chorale yourself, you can easily hook up your own custom domain."
+                ]
+              ]
+            },
+            "created_time": 1586670300000,
+            "last_edited_time": 1586671440000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "f1b3bcc7-0fd3-459f-b6a6-15592d77790b": {
+          "role": "reader",
+          "value": {
+            "id": "f1b3bcc7-0fd3-459f-b6a6-15592d77790b",
+            "version": 125,
+            "type": "numbered_list",
+            "properties": {
+              "title": [
+                [
+                  "Chorale allows custom theming.",
+                  [
+                    [
+                      "b"
+                    ]
+                  ]
+                ],
+                [
+                  " Chorale is open source and allows easy changing of block formatting."
+                ]
+              ]
+            },
+            "created_time": 1586670300000,
+            "last_edited_time": 1586671440000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "dd6f882e-1681-4a2a-a405-2147c1dc153c": {
+          "role": "reader",
+          "value": {
+            "id": "dd6f882e-1681-4a2a-a405-2147c1dc153c",
+            "version": 345,
+            "type": "numbered_list",
+            "properties": {
+              "title": [
+                [
+                  "Chorale updates in real time without requiring a rebuild. ",
+                  [
+                    [
+                      "b"
+                    ]
+                  ]
+                ],
+                [
+                  "Because Chorale rerenders pages on every page load, the resulting content is always up to date."
+                ]
+              ]
+            },
+            "created_time": 1586670300000,
+            "last_edited_time": 1586672640000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "ed8ceb40-fed6-4c0f-a992-c406512e09e0": {
+          "role": "reader",
+          "value": {
+            "id": "ed8ceb40-fed6-4c0f-a992-c406512e09e0",
+            "version": 283,
+            "type": "numbered_list",
+            "properties": {
+              "title": [
+                [
+                  "Chorale caches content efficiently and serves all content from the edge.",
+                  [
+                    [
+                      "b"
+                    ]
+                  ]
+                ],
+                [
+                  " Thanks to Zeit Now's Serverless Prerendering feature, Chorale's content is always served from the edge."
+                ]
+              ]
+            },
+            "created_time": 1586670360000,
+            "last_edited_time": 1586672700000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "523e889a-3ad5-462b-9482-0e1900bdedd1": {
+          "role": "reader",
+          "value": {
+            "id": "523e889a-3ad5-462b-9482-0e1900bdedd1",
+            "version": 123,
+            "type": "numbered_list",
+            "properties": {
+              "title": [
+                [
+                  "Chorale is completely white-labeled",
+                  [
+                    [
+                      "b"
+                    ]
+                  ]
+                ],
+                [
+                  ". No Notion branding, no extra code to load, just you and your content."
+                ]
+              ]
+            },
+            "created_time": 1586724180000,
+            "last_edited_time": 1586724240000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "96b07225-88f1-42f7-a179-e1e0d4949520": {
+          "role": "reader",
+          "value": {
+            "id": "96b07225-88f1-42f7-a179-e1e0d4949520",
+            "version": 347,
+            "type": "text",
+            "properties": {
+              "title": [
+                [
+                  "Chorale is currently in "
+                ],
+                [
+                  "beta",
+                  [
+                    [
+                      "b"
+                    ]
+                  ]
+                ],
+                [
+                  " and is not completely done. There is still a lot of work that needs to be done on improving the interface and being 100% compatible with the Notion API. If you'd like to help with that, check out the GitHub: "
+                ],
+                [
+                  "GitHub Link",
+                  [
+                    [
+                      "a",
+                      "https://github.com/samwightt/chorale-renderer"
+                    ],
+                    [
+                      "h",
+                      "blue"
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "created_time": 1586671440000,
+            "last_edited_time": 1586729700000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "4d272e8f-6a94-4545-ad2c-28b346c8cf33": {
+          "role": "reader",
+          "value": {
+            "id": "4d272e8f-6a94-4545-ad2c-28b346c8cf33",
+            "version": 13,
+            "type": "text",
+            "created_time": 1586755560000,
+            "last_edited_time": 1586823660000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "0f97390d-ed07-4aac-a817-48e60072dcc8": {
+          "role": "reader",
+          "value": {
+            "id": "0f97390d-ed07-4aac-a817-48e60072dcc8",
+            "version": 16,
+            "type": "column_list",
+            "content": [
+              "0aace18f-be89-4ccd-8735-54ea91e352f3",
+              "df0f04df-0192-4f01-8a04-1cbe60c680ec",
+              "c59c9788-0740-4aea-82ac-1fa3cadf1fbc",
+              "615bb448-1e1c-4d44-95b2-ab3e73b1bf63"
+            ],
+            "created_time": 1586723520000,
+            "last_edited_time": 1586723820000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "0aace18f-be89-4ccd-8735-54ea91e352f3": {
+          "role": "reader",
+          "value": {
+            "id": "0aace18f-be89-4ccd-8735-54ea91e352f3",
+            "version": 23,
+            "type": "column",
+            "content": [
+              "8b1a1773-dac9-40c2-aef9-6f449ead9eda"
+            ],
+            "format": {
+              "column_ratio": 0.25
+            },
+            "created_time": 1586723760000,
+            "last_edited_time": 1586823660000,
+            "parent_id": "0f97390d-ed07-4aac-a817-48e60072dcc8",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "df0f04df-0192-4f01-8a04-1cbe60c680ec": {
+          "role": "reader",
+          "value": {
+            "id": "df0f04df-0192-4f01-8a04-1cbe60c680ec",
+            "version": 10,
+            "type": "column",
+            "content": [
+              "84e80837-4dbb-4813-8ad3-7e65d5ae041c"
+            ],
+            "format": {
+              "column_ratio": 0.25
+            },
+            "created_time": 1586723820000,
+            "last_edited_time": 1586723820000,
+            "parent_id": "0f97390d-ed07-4aac-a817-48e60072dcc8",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "c59c9788-0740-4aea-82ac-1fa3cadf1fbc": {
+          "role": "reader",
+          "value": {
+            "id": "c59c9788-0740-4aea-82ac-1fa3cadf1fbc",
+            "version": 15,
+            "type": "column",
+            "content": [
+              "5f6cc15e-8155-493f-b36b-19bae37bb5f2"
+            ],
+            "format": {
+              "column_ratio": 0.25
+            },
+            "created_time": 1586723760000,
+            "last_edited_time": 1586723820000,
+            "parent_id": "0f97390d-ed07-4aac-a817-48e60072dcc8",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "615bb448-1e1c-4d44-95b2-ab3e73b1bf63": {
+          "role": "reader",
+          "value": {
+            "id": "615bb448-1e1c-4d44-95b2-ab3e73b1bf63",
+            "version": 18,
+            "type": "column",
+            "content": [
+              "92b9bd98-2a8e-4ad3-a11e-7ccfb24dfeb5",
+              "0e52833d-1dd0-434c-a97f-f327005609ff"
+            ],
+            "format": {
+              "column_ratio": 0.25
+            },
+            "created_time": 1586723520000,
+            "last_edited_time": 1586823600000,
+            "parent_id": "0f97390d-ed07-4aac-a817-48e60072dcc8",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "8b1a1773-dac9-40c2-aef9-6f449ead9eda": {
+          "role": "reader",
+          "value": {
+            "id": "8b1a1773-dac9-40c2-aef9-6f449ead9eda",
+            "version": 62,
+            "type": "page",
+            "properties": {
+              "title": [
+                [
+                  "How to use"
+                ]
+              ]
+            },
+            "content": [
+              "5dc30c1d-5207-48bf-b4d6-5b8a063218f3",
+              "7112fbdd-8398-4698-b6da-269558578b26",
+              "fa9c9103-c8ef-4272-9797-e256d18252cb",
+              "3ab4ea15-a217-420f-b2ac-5c21e6831f42",
+              "9f7a0ace-f4f9-429e-943c-108b86b7deae",
+              "ef849174-181f-42ee-87a0-3bc0506014d9",
+              "877b31cd-7515-4fa8-9bb8-3246a0cd1e3c",
+              "96e36a8b-3181-4dbb-8833-c2100c4f104a",
+              "978cbd46-fdbf-4e39-89c2-eb91a16f37ea",
+              "36953339-4f6b-4bad-ba84-b2460b25102f",
+              "8736e2ec-c9df-40bf-a126-f1def92eec4f",
+              "b20811b1-5e5c-4e76-b325-3c1deb20b147",
+              "886d9f8c-a094-41a9-9782-dff9b3a11be0",
+              "e6611cba-7757-410b-b8fc-77f719950a93",
+              "830c1d4d-e548-4569-bd1d-d83678a9bc33"
+            ],
+            "created_time": 1586723747538,
+            "last_edited_time": 1586823540000,
+            "parent_id": "0aace18f-be89-4ccd-8735-54ea91e352f3",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "84e80837-4dbb-4813-8ad3-7e65d5ae041c": {
+          "role": "reader",
+          "value": {
+            "id": "84e80837-4dbb-4813-8ad3-7e65d5ae041c",
+            "version": 96,
+            "type": "page",
+            "properties": {
+              "title": [
+                [
+                  "How it works"
+                ]
+              ]
+            },
+            "content": [
+              "b2d77aa6-4c21-47aa-9ceb-5755032b8802",
+              "d40bb4a1-64d6-41ca-8447-81f16fc2253f",
+              "c152501b-b589-4a3d-a796-87dda28b434b",
+              "a4d778c2-3768-44df-b803-d13c331239f6",
+              "aaaacf4d-7147-4826-a40f-59629e6bd131",
+              "a3593969-b171-4813-a2ab-4add155ad0b9",
+              "75d2b3f9-71bb-4dbb-9b19-d47e44444a26",
+              "ae002bc1-f250-4727-8e80-63f7c833048e",
+              "b97528d1-667c-4c38-bf75-65ff492e584f",
+              "37038279-14b5-4a16-9d54-1312ebe9b35d",
+              "0a098355-e703-4d7c-be5d-1aea56d7619c",
+              "d112ca36-eed6-4d6f-bae1-f1edd35185bd",
+              "c81d2c79-42eb-4246-8614-007e6ef8fb29",
+              "87043d6c-09fb-471b-b051-ac440fec296c",
+              "71efe0e7-7069-42dc-9972-7679df67c597",
+              "0e94feaf-112e-4502-8010-f179f6665e6a",
+              "d0a01cf6-ff6d-4cf6-8b61-c54b4d7bc997",
+              "7a83fda4-b31d-4602-baf5-e43255fbc0a9",
+              "1d1fc167-5338-44dd-a478-9e31c5f900ef",
+              "ae26ba3e-6211-4300-9e6d-743a254f1da2",
+              "1a5b41ad-23f4-446f-a04f-0d747a3c2cda",
+              "a120d1b1-7c87-4bda-a06f-5808b74af87c",
+              "cbf2183b-29d5-43f8-b4ff-0d5a66695a2c",
+              "4d775969-918d-4c64-a646-532f5799b8ad",
+              "7002649f-06a0-4b79-b24e-d4b585d3569b",
+              "79753470-523f-4aa9-9a8b-2d91a56fdcb6"
+            ],
+            "created_time": 1586723805123,
+            "last_edited_time": 1586755860000,
+            "parent_id": "df0f04df-0192-4f01-8a04-1cbe60c680ec",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "5f6cc15e-8155-493f-b36b-19bae37bb5f2": {
+          "role": "reader",
+          "value": {
+            "id": "5f6cc15e-8155-493f-b36b-19bae37bb5f2",
+            "version": 96,
+            "type": "page",
+            "properties": {
+              "title": [
+                [
+                  "Changelog"
+                ]
+              ]
+            },
+            "content": [
+              "20460821-8226-4bbe-9635-d4c66f2cbfe6",
+              "c29728ed-32e4-4178-9f51-ef7b36f8de3d",
+              "7f3be43f-12b0-4f96-89db-b2e6f006179a",
+              "dedfa40c-7f54-432c-a59a-e5b964e40175",
+              "da5474ea-dd1f-468c-b8e1-8a342f6e448a",
+              "3f411b16-6fca-4ec7-b619-992508993de3",
+              "1cd599f0-cb89-491e-b3a7-909b3fcfe4ff",
+              "de1b9154-c58e-4195-82c2-9c7d81dc2590",
+              "7a8280b9-e2ec-40d1-ae9a-ffa9b9d8e99f",
+              "1916e4f6-c54a-4e0a-82ce-c5151f0ca6c0",
+              "672829d4-4846-44ee-9338-a718c66fddce",
+              "7ac53518-b56a-4653-ae95-d43a485f230a",
+              "3e99737d-7249-40df-84bb-ddb45f547ad8"
+            ],
+            "created_time": 1586723411915,
+            "last_edited_time": 1586823660000,
+            "parent_id": "c59c9788-0740-4aea-82ac-1fa3cadf1fbc",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "92b9bd98-2a8e-4ad3-a11e-7ccfb24dfeb5": {
+          "role": "reader",
+          "value": {
+            "id": "92b9bd98-2a8e-4ad3-a11e-7ccfb24dfeb5",
+            "version": 58,
+            "type": "page",
+            "properties": {
+              "title": [
+                [
+                  "Roadmap"
+                ]
+              ]
+            },
+            "content": [
+              "b474e0b5-8682-4d3b-85f4-02769af433a2",
+              "92d2c905-101c-4a46-893e-b33c1fb6a1af",
+              "56e9ae01-a500-424c-b229-6814f8a26e96",
+              "d26ee8f3-756c-486a-bd55-9e7a3f92832b",
+              "c3667c69-dba7-44cd-a4ff-a3c8e106f28b",
+              "c26243f2-e74a-4405-992d-466f656b9296",
+              "fa368bc8-a452-492c-b5f1-f0a6eecae4f7",
+              "df41d1ea-9366-403a-be29-a490e24b4698",
+              "eb16cc69-01e7-402a-af21-1f21da0dd83e",
+              "dbc3106c-3085-44b2-a8b5-822bb9509a99",
+              "e874e726-a729-4b0d-bb35-b277ea48e5a8",
+              "4025df47-737c-4c7f-b45b-d0b3b42cce28",
+              "96fb85ba-acf0-4b56-b2d5-5e86704ce156",
+              "2d4ad335-5822-473e-8119-c4efa5ec9fb2",
+              "d835a2aa-606d-464c-937e-bf57159e9424"
+            ],
+            "created_time": 1586723498438,
+            "last_edited_time": 1586823600000,
+            "parent_id": "615bb448-1e1c-4d44-95b2-ab3e73b1bf63",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "0e52833d-1dd0-434c-a97f-f327005609ff": {
+          "role": "reader",
+          "value": {
+            "id": "0e52833d-1dd0-434c-a97f-f327005609ff",
+            "version": 8,
+            "type": "text",
+            "created_time": 1586823600000,
+            "last_edited_time": 1586823600000,
+            "parent_id": "615bb448-1e1c-4d44-95b2-ab3e73b1bf63",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "5b0f4cc2-00bd-4f5b-9c6b-5edebc37943c": {
+          "role": "reader",
+          "value": {
+            "id": "5b0f4cc2-00bd-4f5b-9c6b-5edebc37943c",
+            "version": 18,
+            "type": "text",
+            "created_time": 1586755620000,
+            "last_edited_time": 1586823660000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "c68cd695-5029-42a3-ae35-a3ee0a4f4fff": {
+          "role": "reader",
+          "value": {
+            "id": "c68cd695-5029-42a3-ae35-a3ee0a4f4fff",
+            "version": 7,
+            "type": "divider",
+            "created_time": 1586723566224,
+            "last_edited_time": 1586723520000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "5bfe1bb2-77f2-4e85-811a-da273600f96d": {
+          "role": "reader",
+          "value": {
+            "id": "5bfe1bb2-77f2-4e85-811a-da273600f96d",
+            "version": 46,
+            "type": "text",
+            "properties": {
+              "title": [
+                [
+                  "Copyright 2020 "
+                ],
+                [
+                  "Sam Wight",
+                  [
+                    [
+                      "a",
+                      "https://twitter.com/samwightt"
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "format": {
+              "block_color": "gray"
+            },
+            "created_time": 1586670120000,
+            "last_edited_time": 1586672580000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        },
+        "5b4e787d-760a-419d-8341-cbde3ef991f3": {
+          "role": "reader",
+          "value": {
+            "id": "5b4e787d-760a-419d-8341-cbde3ef991f3",
+            "version": 8,
+            "type": "text",
+            "created_time": 1586726940000,
+            "last_edited_time": 1586726940000,
+            "parent_id": "ef28925f-6389-4c1d-962d-a11c86879897",
+            "parent_table": "block",
+            "alive": true,
+            "created_by_table": "notion_user",
+            "created_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "last_edited_by_table": "notion_user",
+            "last_edited_by_id": "c2834e6b-760d-4ab9-a16f-d252b102197b"
+          }
+        }
+      },
+      "notion_user": {
+        "c2834e6b-760d-4ab9-a16f-d252b102197b": {
+          "role": "reader",
+          "value": {
+            "id": "c2834e6b-760d-4ab9-a16f-d252b102197b",
+            "version": 28,
+            "email": "sdwight@crimson.ua.edu",
+            "given_name": "Sam",
+            "family_name": "Wight",
+            "profile_photo": "https://s3-us-west-2.amazonaws.com/public.notion-static.com/b7cd8cee-a857-49f8-a604-6497920cd41a/PuvBVUJO_400x400.jpg",
+            "onboarding_completed": true,
+            "mobile_onboarding_completed": true,
+            "clipper_onboarding_completed": true
+          }
+        }
+      },
+      "space": {}
+    },
+    "cursor": {
+      "stack": []
+    }
+  }

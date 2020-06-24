@@ -29,7 +29,6 @@ pub fn can_be_grouped<'a>(value: &RootBlockType, vector: &Vec<&'a BaseValueType>
 pub fn render_wrapper<'a>(vector: &'a Vec<&'a BaseValueType>, blocks: &BlockTableType) -> Markup {
     if vector.len() == 0 { return html! {} }
     let first = vector[0];
-    println!("This is being called!");
     match first.block {
         RootBlockType::NumberedList |
         RootBlockType::BulletedList {properties: _} => {
@@ -64,7 +63,6 @@ pub fn render_children<'a>(ids: &Vec<String>, blocks: &BlockTableType) -> Result
                     b.push(&result);
                     let result = render_wrapper(&b, &blocks);
                     a.push(result);
-                    println!("Grouping is working!!");
                     return (a, vec![]);
                 }
                 else {
@@ -147,7 +145,6 @@ fn render_text_block(properties: &Option<TextProperties>) -> Markup {
 }
 
 fn render_bulleted_list(properties: &Option<TextProperties>) -> Markup {
-    println!("This works!");
     html! { 
         li {
             @if let Some(properties) = properties {
@@ -173,7 +170,6 @@ fn render_block(block: &RootBlockType) -> Markup {
 pub fn render(id: &String, blocks: &BlockTableType) -> Result<Markup> {
     let root = blocks.get(id);
 
-    println!("We're hitting this weirdly.");
 
     // We want to always return *something*, so this function doesn't deal with error cases
     if let Some(root) = root {
@@ -196,7 +192,6 @@ pub fn render(id: &String, blocks: &BlockTableType) -> Result<Markup> {
             }
         }
     }
-    println!("We're hitting here!");
 
     Ok(html! {})
 }

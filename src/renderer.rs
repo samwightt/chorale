@@ -30,8 +30,8 @@ pub fn render_wrapper<'a>(vector: &'a Vec<&'a BaseValueType>, blocks: &BlockTabl
     if vector.len() == 0 { return html! {} }
     let first = vector[0];
     match first.block {
-        RootBlockType::NumberedList => {
-            let count = vector.len();
+        RootBlockType::NumberedList |
+        RootBlockType::BulletedList => {
             html! {
                 ul {
                     @for item in vector.iter() {
@@ -44,7 +44,7 @@ pub fn render_wrapper<'a>(vector: &'a Vec<&'a BaseValueType>, blocks: &BlockTabl
                     }
                 }
             }
-        },
+        }
         _ => html! {}
     }
 }
@@ -61,7 +61,7 @@ pub fn render_children<'a>(ids: &Vec<String>, blocks: &BlockTableType) -> Result
                     b.push(result);
                     return (a, b);
                 }
-                else if !needs_grouping(&result.block) {
+                else if needs_grouping(&result.block) {
                     let result = render_wrapper(&b, &blocks);
                     a.push(result);
                     return (a, vec![]);
@@ -76,7 +76,10 @@ pub fn render_children<'a>(ids: &Vec<String>, blocks: &BlockTableType) -> Result
         return (a, b);
     });
 
-    let (results, _) = results;
+    let (mut results, b) = results;
+    if b.len() > 0 {
+        results.push(render_wrapper(&b, &blocks));
+    }
     Ok(html! {
         div {
             @for result in results.iter() {

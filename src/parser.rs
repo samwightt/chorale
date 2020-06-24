@@ -4,24 +4,6 @@ use std::collections::HashMap;
 use anyhow::Result;
 
 #[derive(Serialize, Deserialize)]
-pub struct BaseValueType {
-    pub id: String,
-    pub version: i64,
-    pub created_time: i64,
-    pub last_edited_time: i64,
-    pub parent_id: String,
-    pub parent_table: String,
-    pub alive: bool,
-    pub created_by_table: String,
-    pub created_by_id: String,
-    pub last_edited_by_table: String,
-    pub last_edited_by_id: String,
-    pub shard_id: Option<i64>,
-    pub space_id: Option<String>,
-    pub content: Option<Vec<String>>
-}
-
-#[derive(Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum YesOrNo {
     Yes,
@@ -89,71 +71,55 @@ pub struct TextProperties {
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum RootBlockType {
     Text { 
-        #[serde(flatten)]
-        data: BaseValueType,
         properties: Option<TextProperties>
     },
-    BulletedList {
-        #[serde(flatten)]
-        data: BaseValueType
-    },
-    NumberedList {
-        #[serde(flatten)]
-        data: BaseValueType
-    },
-    Header {
-        #[serde(flatten)]
-        data: BaseValueType
-    },
-    SubHeader {
-        #[serde(flatten)]
-        data: BaseValueType
-    },
-    SubSubheader {
-        #[serde(flatten)]
-        data: BaseValueType
-    },
-    Quote {
-        #[serde(flatten)]
-        data: BaseValueType
-    },
+    BulletedList,
+    NumberedList,
+    Header,
+    SubHeader,
+    SubSubheader,
+    Quote,
     ToDo {
-        #[serde(flatten)]
-        data: BaseValueType,
         properties: TodoProperties
     },
-    Divider {
-        #[serde(flatten)]
-        data: BaseValueType
-    },
-    ColumnList {
-        #[serde(flatten)]
-        data: BaseValueType
-    },
+    Divider,
+    ColumnList,
     Column {
-        #[serde(flatten)]
-        data: BaseValueType,
         format: ColumnFormat
     },
     Image {
-        #[serde(flatten)]
-        data: BaseValueType,
         properties: ImageProperties,
         format: ImageFormat,
         file_ids: Vec<String>
     },
     Page {
-        #[serde(flatten)]
-        data: BaseValueType,
         format: Option<PageFormat>,
         file_ids: Option<Vec<String>>
     },
     Figma {
-        #[serde(flatten)]
-        data: BaseValueType,
         properties: Option<FigmaProperties>,
         format: Option<FigmaFormat>
     }
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct BaseValueType {
+    pub id: String,
+    pub version: i64,
+    pub created_time: i64,
+    pub last_edited_time: i64,
+    pub parent_id: String,
+    pub parent_table: String,
+    pub alive: bool,
+    pub created_by_table: String,
+    pub created_by_id: String,
+    pub last_edited_by_table: String,
+    pub last_edited_by_id: String,
+    pub shard_id: Option<i64>,
+    pub space_id: Option<String>,
+    pub content: Option<Vec<String>>,
+    #[serde(flatten)]
+    pub block: RootBlockType
 }
 
 #[derive(Serialize, Deserialize)]
@@ -178,8 +144,6 @@ pub enum ColorType {
     PinkBackground,
     RedBackground
 }
-
-
 
 #[derive(Copy, Clone)]
 pub enum NoContextFormat {
@@ -275,7 +239,7 @@ pub enum Either<L, R> {
 #[derive(Serialize, Deserialize)]
 pub struct BlockType {
     pub role: String,
-    pub value: Either<RootBlockType, Value>
+    pub value: Either<BaseValueType, Value>
 }
 
 #[derive(Serialize, Deserialize)]
@@ -296,6 +260,8 @@ pub struct NotionUserType {
     pub role: String,
     pub value: NotionUserValueType
 }
+
+pub type BlockTableType = HashMap<String, BlockType>;
 
 #[derive(Serialize, Deserialize)]
 pub struct RecordMapType {

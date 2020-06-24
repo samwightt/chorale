@@ -68,10 +68,15 @@ pub struct TextProperties {
 }
 
 #[derive(Serialize, Deserialize)]
+pub struct PageProperties{
+    pub title: Vec<FormattedText>
+}
+
+#[derive(Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum RootBlockType {
     Text { 
-        properties: Option<TextProperties>
+        properties: TextProperties
     },
     BulletedList,
     NumberedList,
@@ -94,7 +99,8 @@ pub enum RootBlockType {
     },
     Page {
         format: Option<PageFormat>,
-        file_ids: Option<Vec<String>>
+        file_ids: Option<Vec<String>>,
+        properties: PageProperties
     },
     Figma {
         properties: Option<FigmaProperties>,
@@ -181,7 +187,7 @@ enum IntermediaryFormatEnum {
 
 #[derive(Serialize, Deserialize)]
 #[serde(from = "IntermediaryFormatEnum")]
-enum FormatType {
+pub enum FormatType {
     NoContext(NoContextFormat),
     Context(String, String)
 }
@@ -199,14 +205,14 @@ impl From<IntermediaryFormatEnum> for FormatType {
 #[derive(Serialize, Deserialize)]
 #[serde(untagged)]
 enum IntermediaryFormattingRepresentation {
-    Main(Either<Vec<String>, (String, Vec<Vec<String>>)>)
+    Main(Either<Vec<String>, (String, Vec<FormatType>)>)
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(from = "IntermediaryFormattingRepresentation")]
 pub struct FormattedText {
-    text: String,
-    formatting: Option<Vec<Vec<String>>>
+    pub text: String,
+    pub formatting: Option<Vec<FormatType>>
 }
 
 impl From<IntermediaryFormattingRepresentation> for FormattedText {

@@ -89,8 +89,76 @@ pub fn render_children<'a>(ids: &Vec<String>, blocks: &BlockTableType) -> Result
     })
 }
 
+pub fn render_text(text: &Vec<FormattedText>) -> Markup {
+    text.iter().fold(html! {}, |acc, x| {
+        if let Some(formatting) = &x.formatting {
+            let initial = html! {
+                (x.text)
+            };
+            let resulting = formatting.iter().fold(initial, |other, y| {
+                return match y {
+                    FormatType::NoContext(f) => {
+                        match f {
+                            NoContextFormat::Bold => html! {
+                                b {
+                                    (other)
+                                }
+                            },
+                            NoContextFormat::Italic => html! {
+                                em {
+                                    (other)
+                                }
+                            },
+                            _ => other
+                        }
+                    },
+                    _ => other
+                }
+            });
+            return html! {
+                (acc)
+                (resulting)
+            };
+        }
+        return html! {
+            (acc)
+            (x.text)
+        };
+    })
+}
+
+pub fn render_page(properties: &PageProperties) -> Markup {
+    html! {
+        h1 {
+            (render_text(&properties.title))
+        }
+    }
+}
+
+pub fn render_text_block(properties: &TextProperties) -> Markup {
+    html! {
+        p {
+            (render_text(&properties.title))
+        }
+    }
+}
+
+fn render_block(block: &RootBlockType) -> Markup {
+    match block {
+        RootBlockType::Page {format, file_ids, properties } => render_page(properties),
+        RootBlockType::Text {properties} => render_text_block(properties),
+        _ => html! {
+            h1 {
+                "Could not render!"
+            }
+        }
+    }
+}
+
 pub fn render(id: &String, blocks: &BlockTableType) -> Result<Markup> {
     let root = blocks.get(id);
+
+    println!("We're hitting this weirdly.");
 
     // We want to always return *something*, so this function doesn't deal with error cases
     if let Some(root) = root {
@@ -100,8 +168,8 @@ pub fn render(id: &String, blocks: &BlockTableType) -> Result<Markup> {
             if let Some(children) = &value.content {
                 let children = render_children(&children, &blocks);
                 return Ok(html! {
-                    h1 {
-                        "This works too!"
+                    div {
+                        (render_block(&value.block))
                         @if let Ok(children) = children {
                             (children)
                         }
@@ -110,13 +178,14 @@ pub fn render(id: &String, blocks: &BlockTableType) -> Result<Markup> {
             }
             else {
                 return Ok(html! {
-                    h1 {
-                        "This works!"
+                    div {
+                        (render_block(&value.block))
                     }
                 });
             }
         }
     }
+    println!("We're hitting here!");
 
     Ok(html! {})
 }

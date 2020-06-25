@@ -3,30 +3,30 @@ use serde_json::{Value};
 use std::collections::HashMap;
 use anyhow::Result;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "lowercase")]
 pub enum YesOrNo {
     Yes,
     No
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct TodoProperties {
     pub title: Value,
     pub checked: Vec<Vec<YesOrNo>>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct ColumnFormat {
     pub column_ratio: f64
 }
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct ImageProperties {
     pub source: Vec<Vec<String>>,
     pub caption: Option<Vec<Vec<String>>>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct ImageFormat {
     pub block_width: i64,
     pub block_height: i64,
@@ -37,7 +37,7 @@ pub struct ImageFormat {
     pub block_preserve_scale: bool
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct PageFormat {
     pub page_full_width: Option<bool>,
     pub page_small_text: Option<bool>,
@@ -47,32 +47,32 @@ pub struct PageFormat {
     pub page_icon: Option<String>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct PagePermissions {
     pub role: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct FigmaProperties {
     pub source: Option<Value>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct FigmaFormat {
     pub block_height: Option<i64>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct TextProperties {
     pub title: Vec<FormattedText>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct PageProperties{
     pub title: Vec<FormattedText>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum RootBlockType {
     Text { 
@@ -81,7 +81,12 @@ pub enum RootBlockType {
     BulletedList {
         properties: Option<TextProperties>
     },
-    NumberedList,
+    NumberedList {
+        properties: Option<TextProperties>
+    },
+    Toggle {
+        properties: Option<TextProperties>
+    },
     Header,
     SubHeader,
     SubSubheader,
@@ -110,7 +115,7 @@ pub enum RootBlockType {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct BaseValueType {
     pub id: String,
     pub version: i64,
@@ -130,7 +135,7 @@ pub struct BaseValueType {
     pub block: RootBlockType
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "snake_case")]
 pub enum ColorType {
     Gray,
@@ -153,10 +158,13 @@ pub enum ColorType {
     RedBackground
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub enum NoContextFormat {
     Bold,
     Italic,
+    Strike,
+    Underline,
+    Code,
     None
 }
 
@@ -165,6 +173,9 @@ impl Serialize for NoContextFormat {
         serializer.serialize_str(match *self {
             NoContextFormat::Bold => "b",
             NoContextFormat::Italic => "i",
+            NoContextFormat::Strike => "s",
+            NoContextFormat::Underline => "_",
+            NoContextFormat::Code => "c",
             NoContextFormat::None => ""
         })
     }
@@ -176,6 +187,9 @@ impl<'de> Deserialize<'de> for NoContextFormat {
         match s.as_str() {
             "i" => Ok(NoContextFormat::Italic),
             "b" => Ok(NoContextFormat::Bold),
+            "s" => Ok(NoContextFormat::Strike),
+            "_" => Ok(NoContextFormat::Underline),
+            "c" => Ok(NoContextFormat::Code),
             _ => Ok(NoContextFormat::None)
         }
     }
@@ -187,7 +201,7 @@ enum IntermediaryFormatEnum {
     Main(Either<[NoContextFormat; 1], (String, String)>)
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(from = "IntermediaryFormatEnum")]
 pub enum FormatType {
     NoContext(NoContextFormat),
@@ -204,13 +218,13 @@ impl From<IntermediaryFormatEnum> for FormatType {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(untagged)]
 enum IntermediaryFormattingRepresentation {
     Main(Either<Vec<String>, (String, Vec<FormatType>)>)
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(from = "IntermediaryFormattingRepresentation")]
 pub struct FormattedText {
     pub text: String,
@@ -237,20 +251,20 @@ impl From<IntermediaryFormattingRepresentation> for FormattedText {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(untagged)]
 pub enum Either<L, R> {
     Left(L),
     Right(R)
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct BlockType {
     pub role: String,
     pub value: Either<BaseValueType, Value>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct NotionUserValueType {
     pub id: String,
     pub version: i64,
@@ -263,7 +277,7 @@ pub struct NotionUserValueType {
     pub clipper_onboarding_complete: Option<bool>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct NotionUserType {
     pub role: String,
     pub value: NotionUserValueType
@@ -271,13 +285,13 @@ pub struct NotionUserType {
 
 pub type BlockTableType = HashMap<String, BlockType>;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct RecordMapType {
     pub block: HashMap<String, BlockType>,
     pub notion_user: HashMap<String, NotionUserType>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct LoadPageChunkData {
     pub record_map: RecordMapType,

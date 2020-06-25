@@ -1,23 +1,26 @@
+mod blocks;
+
 use crate::parser::*;
 use maud::{html, Markup};
+use blocks::*;
 
 type Accumulator<'a> = (Vec<Markup>, Vec<&'a BaseValueType>);
 
 pub struct Renderer<'b> {
-    blocks: &'b BlockTableType
+    blocks: &'b BlockTableType,
 }
 
 impl<'b> Renderer<'b> {
     pub fn new(blocks: &'b BlockTableType) -> Self {
         Renderer {
-            blocks
+            blocks,
         }
     }
 
     fn needs_grouping(&self, value: &RootBlockType) -> bool {
         match value {
             RootBlockType::BulletedList {properties: _} |
-            RootBlockType::NumberedList => true,
+            RootBlockType::NumberedList {properties: _} => true,
             _ => false
         }
     }
@@ -28,7 +31,7 @@ impl<'b> Renderer<'b> {
             let first = &vector[0];
             match (&first.block, value) {
                 (RootBlockType::BulletedList { properties: _}, RootBlockType::BulletedList { properties: _}) |
-                (RootBlockType::NumberedList, RootBlockType::NumberedList) => true,
+                (RootBlockType::NumberedList { properties: _}, RootBlockType::NumberedList {properties: _}) => true,
                 _ => false
             }
         }
@@ -39,21 +42,13 @@ impl<'b> Renderer<'b> {
         if vector.len() == 0 { return html! {} }
         let first = vector[0];
         match first.block {
-            RootBlockType::NumberedList |
-            RootBlockType::BulletedList {properties: _} => {
-                html! {
-                    ul {
-                        @for item in vector.iter() {
-                            (self.render(&item.id))
-                        }
-                    }
-                }
-            }
+            RootBlockType::BulletedList {properties: _} => render_bulleted_list_wrapper(&vector, &self),
+            RootBlockType::NumberedList {properties: _} => render_numbered_list_wrapper(&vector, &self),
             _ => html! {}
         }
     }
 
-    fn render_children<'a>(&self, ids: &Vec<String>) -> Markup {
+    pub fn render_children<'a>(&self, ids: &Vec<String>) -> Markup {
         let acc: Accumulator<'a> = (vec![], vec![]);
 
         let results = ids.iter().fold(acc, |(mut a, mut b), x| {
@@ -61,7 +56,7 @@ impl<'b> Renderer<'b> {
             if let Some(block) = element {
                 if let Either::Left(result) = &block.value {
                     let rendered = self.render(&x);
-                    if self.needs_grouping(&result.block) && self.can_be_grouped(&result.block, &b) {
+                    if self.needs_grouping(&result.block) && (self.can_be_grouped(&result.block, &b) || b.len() == 0) {
                         b.push(result);
                         return (a, b);
                     }
@@ -87,10 +82,8 @@ impl<'b> Renderer<'b> {
         }
 
         html! {
-            div {
-                @for result in results.iter() {
-                    (result)
-                }
+            @for result in results.iter() {
+                (result)
             }
         }
     }
@@ -105,12 +98,27 @@ impl<'b> Renderer<'b> {
                         FormatType::NoContext(f) => {
                             match f {
                                 NoContextFormat::Bold => html! {
-                                    b {
+                                    b class="notion-bold" {
                                         (other)
                                     }
                                 },
                                 NoContextFormat::Italic => html! {
-                                    em {
+                                    em class="notion-italic" {
+                                        (other)
+                                    }
+                                },
+                                NoContextFormat::Strike => html! {
+                                    strike class="notion-strike" {
+                                        (other)
+                                    }
+                                },
+                                NoContextFormat::Underline => html! {
+                                    u class="notion-underline" {
+                                        (other)
+                                    }
+                                },
+                                NoContextFormat::Code => html! {
+                                    code class="notion-code-inline" {
                                         (other)
                                     }
                                 },
@@ -132,56 +140,6 @@ impl<'b> Renderer<'b> {
         })
     }
 
-    fn render_page(&self, properties: &PageProperties, children: &Option<Vec<String>>) -> Markup {
-        let mut rendered_children = html! {};
-        if let Some(children) = children {
-            rendered_children = self.render_children(&children);
-        }
-        html! {
-            h1 {
-                (self.render_text(&properties.title))
-            }
-            (rendered_children)
-        }
-    }
-
-    fn render_text_block(&self, properties: &Option<TextProperties>, children: &Option<Vec<String>>) -> Markup {
-        let mut rendered_children = html! {};
-        if let Some(children) = children {
-            rendered_children = self.render_children(&children);
-        }
-        html! {
-            p {
-                @if let Some(properties) = properties {
-                    (self.render_text(&properties.title))
-                }
-                (rendered_children)
-            }
-        }
-    }
-
-    fn render_bulleted_list(&self, properties: &Option<TextProperties>, children: &Option<Vec<String>>) -> Markup {
-        html! { 
-            li {
-                @if let Some(properties) = properties {
-                    (self.render_text(&properties.title))
-                }
-            }
-        }
-    }
-
-    fn render_block(&self, value: &BaseValueType) -> Markup {
-        match &value.block {
-            RootBlockType::Page {format: _, file_ids: _, properties } => self.render_page(properties, &value.content),
-            RootBlockType::Text {properties} => self.render_text_block(properties, &value.content),
-            RootBlockType::BulletedList {properties} => self.render_bulleted_list(properties, &value.content),
-            _ => html! {
-                h1 {
-                    "Could not render!"
-                }
-            }
-        }
-    }
     pub fn render(&self, id: &String) -> Markup {
         let root = self.blocks.get(id);
 
@@ -190,15 +148,17 @@ impl<'b> Renderer<'b> {
             let value = &root.value;
 
             if let Either::Left(value) = value { 
-                if let Some(children) = &value.content {
-                    return html! {
-                        (self.render_block(value))
+                return match &value.block {
+                    RootBlockType::Page {format: _, file_ids: _, properties } => render_page(properties, &value.content, &self),
+                    RootBlockType::Text {properties} => render_text_block(properties, &value.content, &self),
+                    RootBlockType::BulletedList {properties} => render_bulleted_list(properties, &value.content, &self),
+                    RootBlockType::NumberedList {properties} => render_numbered_list(properties, &value.content, &self),
+                    RootBlockType::Toggle {properties} => render_toggle(properties, &value.content, &self),
+                    _ => html! {
+                        h1 {
+                            "Could not render!"
+                        }
                     }
-                }
-                else {
-                    return html! {
-                        (self.render_block(value))
-                    };
                 }
             }
         }

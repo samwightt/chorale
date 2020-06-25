@@ -1,197 +1,208 @@
 use crate::parser::*;
-use anyhow::{Result, anyhow};
-use std::rc::Rc;
-use horrorshow::{Render, box_html};
-use maud::{DOCTYPE, html, Markup};
+use maud::{html, Markup};
 
 type Accumulator<'a> = (Vec<Markup>, Vec<&'a BaseValueType>);
 
-pub fn needs_grouping(value: &RootBlockType) -> bool {
-    match value {
-        RootBlockType::BulletedList {properties: _} |
-        RootBlockType::NumberedList => true,
-        _ => false
-    }
+pub struct Renderer<'b> {
+    blocks: &'b BlockTableType
 }
 
-pub fn can_be_grouped<'a>(value: &RootBlockType, vector: &Vec<&'a BaseValueType>) -> bool {
-    if vector.len() == 0 { false }
-    else {
-        let first = &vector[0];
-        match (&first.block, value) {
-            (RootBlockType::BulletedList { properties: _}, RootBlockType::BulletedList { properties: _}) |
-            (RootBlockType::NumberedList, RootBlockType::NumberedList) => true,
+impl<'b> Renderer<'b> {
+    pub fn new(blocks: &'b BlockTableType) -> Self {
+        Renderer {
+            blocks
+        }
+    }
+
+    fn needs_grouping(&self, value: &RootBlockType) -> bool {
+        match value {
+            RootBlockType::BulletedList {properties: _} |
+            RootBlockType::NumberedList => true,
             _ => false
         }
     }
-}
 
-pub fn render_wrapper<'a>(vector: &'a Vec<&'a BaseValueType>, blocks: &BlockTableType) -> Markup {
-    if vector.len() == 0 { return html! {} }
-    let first = vector[0];
-    match first.block {
-        RootBlockType::NumberedList |
-        RootBlockType::BulletedList {properties: _} => {
-            html! {
-                ul {
-                    @for item in vector.iter() {
-                        (match render(&item.id, &blocks) {
-                            Ok(a) => a,
-                            Err(_) => html! {}
-                        })
+    fn can_be_grouped<'a>(&self, value: &RootBlockType, vector: &Vec<&'a BaseValueType>) -> bool {
+        if vector.len() == 0 { false }
+        else {
+            let first = &vector[0];
+            match (&first.block, value) {
+                (RootBlockType::BulletedList { properties: _}, RootBlockType::BulletedList { properties: _}) |
+                (RootBlockType::NumberedList, RootBlockType::NumberedList) => true,
+                _ => false
+            }
+        }
+    }
+
+
+    fn render_wrapper<'a>(&self, vector: &'a Vec<&'a BaseValueType>) -> Markup {
+        if vector.len() == 0 { return html! {} }
+        let first = vector[0];
+        match first.block {
+            RootBlockType::NumberedList |
+            RootBlockType::BulletedList {properties: _} => {
+                html! {
+                    ul {
+                        @for item in vector.iter() {
+                            (self.render(&item.id))
+                        }
                     }
                 }
             }
+            _ => html! {}
         }
-        _ => html! {}
     }
-}
 
-pub fn render_children<'a>(ids: &Vec<String>, blocks: &BlockTableType) -> Result<Markup> {
-    let acc: Accumulator<'a> = (vec![], vec![]);
+    fn render_children<'a>(&self, ids: &Vec<String>) -> Markup {
+        let acc: Accumulator<'a> = (vec![], vec![]);
 
-    let results = ids.iter().fold(acc, |(mut a, mut b), x| {
-        let element = blocks.get(x);
-        if let Some(block) = element {
-            if let Either::Left(result) = &block.value {
-                let rendered = render(&x, &blocks).unwrap_or(html! {});
-                if needs_grouping(&result.block) && can_be_grouped(&result.block, &b) {
-                    b.push(result);
-                    return (a, b);
+        let results = ids.iter().fold(acc, |(mut a, mut b), x| {
+            let element = self.blocks.get(x);
+            if let Some(block) = element {
+                if let Either::Left(result) = &block.value {
+                    let rendered = self.render(&x);
+                    if self.needs_grouping(&result.block) && self.can_be_grouped(&result.block, &b) {
+                        b.push(result);
+                        return (a, b);
+                    }
+                    else if self.needs_grouping(&result.block) {
+                        b.push(&result);
+                        let result = self.render_wrapper(&b);
+                        a.push(result);
+                        return (a, vec![]);
+                    }
+                    else {
+                        a.push(rendered);
+                        return (a, b);
+                    }
                 }
-                else if needs_grouping(&result.block) {
-                    b.push(&result);
-                    let result = render_wrapper(&b, &blocks);
-                    a.push(result);
-                    return (a, vec![]);
-                }
-                else {
-                    a.push(rendered);
-                    return (a, b);
+            }
+
+            return (a, b);
+        });
+
+        let (mut results, b) = results;
+        if b.len() > 0 {
+            results.push(self.render_wrapper(&b));
+        }
+
+        html! {
+            div {
+                @for result in results.iter() {
+                    (result)
                 }
             }
         }
-
-        return (a, b);
-    });
-
-    let (mut results, b) = results;
-    if b.len() > 0 {
-        results.push(render_wrapper(&b, &blocks));
     }
-    Ok(html! {
-        div {
-            @for result in results.iter() {
-                (result)
+    pub fn render_text(&self, text: &Vec<FormattedText>) -> Markup {
+        text.iter().fold(html! {}, |acc, x| {
+            if let Some(formatting) = &x.formatting {
+                let initial = html! {
+                    (x.text)
+                };
+                let resulting = formatting.iter().fold(initial, |other, y| {
+                    return match y {
+                        FormatType::NoContext(f) => {
+                            match f {
+                                NoContextFormat::Bold => html! {
+                                    b {
+                                        (other)
+                                    }
+                                },
+                                NoContextFormat::Italic => html! {
+                                    em {
+                                        (other)
+                                    }
+                                },
+                                _ => other
+                            }
+                        },
+                        _ => other
+                    }
+                });
+                return html! {
+                    (acc)
+                    (resulting)
+                };
             }
-        }
-    })
-}
-
-pub fn render_text(text: &Vec<FormattedText>) -> Markup {
-    text.iter().fold(html! {}, |acc, x| {
-        if let Some(formatting) = &x.formatting {
-            let initial = html! {
-                (x.text)
-            };
-            let resulting = formatting.iter().fold(initial, |other, y| {
-                return match y {
-                    FormatType::NoContext(f) => {
-                        match f {
-                            NoContextFormat::Bold => html! {
-                                b {
-                                    (other)
-                                }
-                            },
-                            NoContextFormat::Italic => html! {
-                                em {
-                                    (other)
-                                }
-                            },
-                            _ => other
-                        }
-                    },
-                    _ => other
-                }
-            });
             return html! {
                 (acc)
-                (resulting)
+                (x.text)
             };
-        }
-        return html! {
-            (acc)
-            (x.text)
-        };
-    })
-}
-
-fn render_page(properties: &PageProperties) -> Markup {
-    html! {
-        h1 {
-            (render_text(&properties.title))
-        }
+        })
     }
-}
 
-fn render_text_block(properties: &Option<TextProperties>) -> Markup {
-    html! {
-        p {
-            @if let Some(properties) = properties {
-                (render_text(&properties.title))
-            }
+    fn render_page(&self, properties: &PageProperties, children: &Option<Vec<String>>) -> Markup {
+        let mut rendered_children = html! {};
+        if let Some(children) = children {
+            rendered_children = self.render_children(&children);
         }
-    }
-}
-
-fn render_bulleted_list(properties: &Option<TextProperties>) -> Markup {
-    html! { 
-        li {
-            @if let Some(properties) = properties {
-                (render_text(&properties.title))
-            }
-        }
-    }
-}
-
-fn render_block(block: &RootBlockType) -> Markup {
-    match block {
-        RootBlockType::Page {format: _, file_ids: _, properties } => render_page(properties),
-        RootBlockType::Text {properties} => render_text_block(properties),
-        RootBlockType::BulletedList {properties} => render_bulleted_list(properties),
-        _ => html! {
+        html! {
             h1 {
-                "Could not render!"
+                (self.render_text(&properties.title))
+            }
+            (rendered_children)
+        }
+    }
+
+    fn render_text_block(&self, properties: &Option<TextProperties>, children: &Option<Vec<String>>) -> Markup {
+        let mut rendered_children = html! {};
+        if let Some(children) = children {
+            rendered_children = self.render_children(&children);
+        }
+        html! {
+            p {
+                @if let Some(properties) = properties {
+                    (self.render_text(&properties.title))
+                }
+                (rendered_children)
             }
         }
     }
-}
 
-pub fn render(id: &String, blocks: &BlockTableType) -> Result<Markup> {
-    let root = blocks.get(id);
+    fn render_bulleted_list(&self, properties: &Option<TextProperties>, children: &Option<Vec<String>>) -> Markup {
+        html! { 
+            li {
+                @if let Some(properties) = properties {
+                    (self.render_text(&properties.title))
+                }
+            }
+        }
+    }
 
+    fn render_block(&self, value: &BaseValueType) -> Markup {
+        match &value.block {
+            RootBlockType::Page {format: _, file_ids: _, properties } => self.render_page(properties, &value.content),
+            RootBlockType::Text {properties} => self.render_text_block(properties, &value.content),
+            RootBlockType::BulletedList {properties} => self.render_bulleted_list(properties, &value.content),
+            _ => html! {
+                h1 {
+                    "Could not render!"
+                }
+            }
+        }
+    }
+    pub fn render(&self, id: &String) -> Markup {
+        let root = self.blocks.get(id);
 
-    // We want to always return *something*, so this function doesn't deal with error cases
-    if let Some(root) = root {
-        let value = &root.value;
+        // We want to always return *something*, so this function doesn't deal with error cases
+        if let Some(root) = root {
+            let value = &root.value;
 
-        if let Either::Left(value) = value { 
-            if let Some(children) = &value.content {
-                let children = render_children(&children, &blocks);
-                return Ok(html! {
-                    (render_block(&value.block))
-                    @if let Ok(children) = children {
-                        (children)
+            if let Either::Left(value) = value { 
+                if let Some(children) = &value.content {
+                    return html! {
+                        (self.render_block(value))
                     }
-                });
-            }
-            else {
-                return Ok(html! {
-                    (render_block(&value.block))
-                });
+                }
+                else {
+                    return html! {
+                        (self.render_block(value))
+                    };
+                }
             }
         }
-    }
 
-    Ok(html! {})
+        html! {}
+    }
 }

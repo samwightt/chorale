@@ -66,6 +66,12 @@ impl<'b> Renderer<'b> {
                         a.push(result);
                         return (a, vec![]);
                     }
+                    else if b.len() > 0 {
+                        a.push(rendered);
+                        let result = self.render_wrapper(&b);
+                        a.push(result);
+                        return (a, vec![]);
+                    }
                     else {
                         a.push(rendered);
                         return (a, b);

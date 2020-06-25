@@ -1,7 +1,5 @@
 use crate::parser::*;
-use maud::{html, Markup};
-
-type Accumulator<'a, R> = (Vec<R>, Vec<&'a BaseValueType>);
+use std::marker::PhantomData;
 
 pub trait BlockRenderer<T> {
     fn page_block(&self, children: &T, text: Option<T>) -> T;
@@ -9,9 +7,12 @@ pub trait BlockRenderer<T> {
     fn bulleted_list_block(&self, children: &T, text: Option<T>) -> T;
     fn numbered_list_block(&self, children: &T, text: Option<T>) -> T;
     fn toggle_block(&self, children: &T, text: Option<T>) -> T;
+    fn empty(&self) -> T;
 }
 
 pub trait InlineRenderer<T> {
+    type R;
+    fn text(&self, text: &str) -> T;
     fn bold(&self, acc: &T) -> T;
     fn italic(&self, acc: &T) -> T;
     fn underline(&self, acc: &T) -> T;
@@ -30,17 +31,17 @@ pub struct Renderer<'b, R, B: BlockRenderer<R>, I: InlineRenderer<R>, W: Wrapper
     block_renderer: B,
     inline_renderer: I,
     wrapper_renderer: W,
-    empty: R,
+    p: PhantomData<R>
 }
 
 impl<'b, R, B: BlockRenderer<R>, I: InlineRenderer<R>, W: WrapperRenderer<R>> Renderer<'b, R, B, I, W> {
-    pub fn new(blocks: &'b BlockTableType, block_renderer: B, inline_renderer: I, wrapper_renderer: W, empty: R) -> Self {
+    pub fn new(blocks: &'b BlockTableType, block_renderer: B, inline_renderer: I, wrapper_renderer: W) -> Self {
         Renderer {
             blocks,
             block_renderer,
             inline_renderer,
             wrapper_renderer,
-            empty
+            p: PhantomData
         }
     }
 
@@ -64,21 +65,20 @@ impl<'b, R, B: BlockRenderer<R>, I: InlineRenderer<R>, W: WrapperRenderer<R>> Re
         }
     }
 
-
     fn render_wrapper<'a>(&self, vector: &'a Vec<&'a BaseValueType>) -> R {
-        if vector.len() == 0 { return self.empty }
+        if vector.len() == 0 { return self.block_renderer.empty() }
         let first = vector[0];
         let rendered = vector.iter().map(|x| self.render(&x.id)).collect::<Vec<_>>();
 
         match first.block {
             RootBlockType::BulletedList {properties: _} => self.wrapper_renderer.bulleted_list_wrapper(rendered),
             RootBlockType::NumberedList {properties: _} => self.wrapper_renderer.numbered_list_wrapper(rendered),
-            _ => self.empty
+            _ => self.block_renderer.empty()
         }
     }
 
     pub fn render_children<'a>(&self, ids: &Vec<String>) -> R {
-        let acc: Accumulator<'a, R> = (vec![], vec![]);
+        let acc: (Vec<R>, Vec<&'a BaseValueType>) = (vec![], vec![]);
 
         let results = ids.iter().fold(acc, |(mut a, mut b), x| {
             let element = self.blocks.get(x);
@@ -118,12 +118,11 @@ impl<'b, R, B: BlockRenderer<R>, I: InlineRenderer<R>, W: WrapperRenderer<R>> Re
 
         self.wrapper_renderer.collect(results)
     }
+
     pub fn render_text(&self, text: &Vec<FormattedText>) -> R {
-        text.iter().fold(self.empty, |acc, x| {
+        text.iter().fold(self.block_renderer.empty(), |acc, x| {
             if let Some(formatting) = &x.formatting {
-                let initial = html! {
-                    (x.text)
-                };
+                let initial = self.inline_renderer.text(&x.text);
                 let resulting = formatting.iter().fold(initial, |other, y| {
                     return match y {
                         FormatType::NoContext(f) => {
@@ -132,7 +131,7 @@ impl<'b, R, B: BlockRenderer<R>, I: InlineRenderer<R>, W: WrapperRenderer<R>> Re
                                 NoContextFormat::Italic => self.inline_renderer.italic(&other),
                                 NoContextFormat::Strike => self.inline_renderer.strike(&other),
                                 NoContextFormat::Underline => self.inline_renderer.underline(&other),
-                                NoContextFormat::Code => self.inline_renderer.code_inline(&other),
+                                NoContextFormat::Code => self.inline_renderer.code(&other),
                                 _ => other
                             }
                         },
@@ -142,11 +141,7 @@ impl<'b, R, B: BlockRenderer<R>, I: InlineRenderer<R>, W: WrapperRenderer<R>> Re
                 return self.wrapper_renderer.collect(vec![acc, resulting]);
             }
 
-            return self.wrapper_renderer.collect(vec![acc, x.text]);
-            return html! {
-                (acc)
-                (x.text)
-            };
+            return self.wrapper_renderer.collect(vec![acc, self.inline_renderer.text(&x.text)]);
         })
     }
 
@@ -158,19 +153,20 @@ impl<'b, R, B: BlockRenderer<R>, I: InlineRenderer<R>, W: WrapperRenderer<R>> Re
             let value = &root.value;
 
             if let Either::Left(value) = value { 
-                let child_ids = &value.content.unwrap_or(vec![]);
+                let temp: &Vec<String> = &vec![];
+                let child_ids = value.content.as_ref().unwrap_or(temp);
                 let children = self.render_children(&child_ids);
                 return match &value.block {
-                    RootBlockType::Page {format: _, file_ids: _, properties } => self.block_renderer.page_block(properties, &value.content, &self),
-                    RootBlockType::Text {properties} => self.block_renderer.text_block(&children, self.render_text(&properties.title)),
-                    RootBlockType::BulletedList {properties} => self.block_renderer.bulleted_list_block(properties, &value.content, &self),
-                    RootBlockType::NumberedList {properties} => self.block_renderer.numbered_list_block(properties, &value.content, &self),
-                    RootBlockType::Toggle {properties} => self.block_renderer.toggle_block(properties, &value.content, &self),
-                    _ => self.empty
+                    RootBlockType::Page {format: _, file_ids: _, properties } => self.block_renderer.page_block(&children, Some(self.render_text(&properties.title))),
+                    RootBlockType::Text {properties} => self.block_renderer.text_block(&children, properties.as_ref().map(|x| self.render_text(&x.title))),
+                    RootBlockType::BulletedList {properties } => self.block_renderer.bulleted_list_block(&children, properties.as_ref().map(|x| self.render_text(&x.title))),
+                    RootBlockType::NumberedList {properties} => self.block_renderer.numbered_list_block(&children, properties.as_ref().map(|x| self.render_text(&x.title))),
+                    RootBlockType::Toggle {properties} => self.block_renderer.toggle_block(&children, properties.as_ref().map(|x| self.render_text(&x.title))),
+                    _ => self.block_renderer.empty()
                 }
             }
         }
 
-        self.empty
+        self.block_renderer.empty()
     }
 }

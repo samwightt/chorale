@@ -1,19 +1,46 @@
-mod blocks;
-
 use crate::parser::*;
 use maud::{html, Markup};
-use blocks::*;
 
-type Accumulator<'a> = (Vec<Markup>, Vec<&'a BaseValueType>);
+type Accumulator<'a, R> = (Vec<R>, Vec<&'a BaseValueType>);
 
-pub struct Renderer<'b> {
-    blocks: &'b BlockTableType,
+pub trait BlockRenderer<T> {
+    fn page_block(&self, children: &T, text: Option<T>) -> T;
+    fn text_block(&self, children: &T, text: Option<T>) -> T;
+    fn bulleted_list_block(&self, children: &T, text: Option<T>) -> T;
+    fn numbered_list_block(&self, children: &T, text: Option<T>) -> T;
+    fn toggle_block(&self, children: &T, text: Option<T>) -> T;
 }
 
-impl<'b> Renderer<'b> {
-    pub fn new(blocks: &'b BlockTableType) -> Self {
+pub trait InlineRenderer<T> {
+    fn bold(&self, acc: &T) -> T;
+    fn italic(&self, acc: &T) -> T;
+    fn underline(&self, acc: &T) -> T;
+    fn strike(&self, acc: &T) -> T;
+    fn code(&self, acc: &T) -> T;
+}
+
+pub trait WrapperRenderer<T> {
+    fn bulleted_list_wrapper(&self, items: Vec<T>) -> T;
+    fn numbered_list_wrapper(&self, items: Vec<T>) -> T;
+    fn collect(&self, items: Vec<T>) -> T;
+}
+
+pub struct Renderer<'b, R, B: BlockRenderer<R>, I: InlineRenderer<R>, W: WrapperRenderer<R>> {
+    blocks: &'b BlockTableType,
+    block_renderer: B,
+    inline_renderer: I,
+    wrapper_renderer: W,
+    empty: R,
+}
+
+impl<'b, R, B: BlockRenderer<R>, I: InlineRenderer<R>, W: WrapperRenderer<R>> Renderer<'b, R, B, I, W> {
+    pub fn new(blocks: &'b BlockTableType, block_renderer: B, inline_renderer: I, wrapper_renderer: W, empty: R) -> Self {
         Renderer {
             blocks,
+            block_renderer,
+            inline_renderer,
+            wrapper_renderer,
+            empty
         }
     }
 
@@ -38,18 +65,20 @@ impl<'b> Renderer<'b> {
     }
 
 
-    fn render_wrapper<'a>(&self, vector: &'a Vec<&'a BaseValueType>) -> Markup {
-        if vector.len() == 0 { return html! {} }
+    fn render_wrapper<'a>(&self, vector: &'a Vec<&'a BaseValueType>) -> R {
+        if vector.len() == 0 { return self.empty }
         let first = vector[0];
+        let rendered = vector.iter().map(|x| self.render(&x.id)).collect::<Vec<_>>();
+
         match first.block {
-            RootBlockType::BulletedList {properties: _} => render_bulleted_list_wrapper(&vector, &self),
-            RootBlockType::NumberedList {properties: _} => render_numbered_list_wrapper(&vector, &self),
-            _ => html! {}
+            RootBlockType::BulletedList {properties: _} => self.wrapper_renderer.bulleted_list_wrapper(rendered),
+            RootBlockType::NumberedList {properties: _} => self.wrapper_renderer.numbered_list_wrapper(rendered),
+            _ => self.empty
         }
     }
 
-    pub fn render_children<'a>(&self, ids: &Vec<String>) -> Markup {
-        let acc: Accumulator<'a> = (vec![], vec![]);
+    pub fn render_children<'a>(&self, ids: &Vec<String>) -> R {
+        let acc: Accumulator<'a, R> = (vec![], vec![]);
 
         let results = ids.iter().fold(acc, |(mut a, mut b), x| {
             let element = self.blocks.get(x);
@@ -87,14 +116,10 @@ impl<'b> Renderer<'b> {
             results.push(self.render_wrapper(&b));
         }
 
-        html! {
-            @for result in results.iter() {
-                (result)
-            }
-        }
+        self.wrapper_renderer.collect(results)
     }
-    pub fn render_text(&self, text: &Vec<FormattedText>) -> Markup {
-        text.iter().fold(html! {}, |acc, x| {
+    pub fn render_text(&self, text: &Vec<FormattedText>) -> R {
+        text.iter().fold(self.empty, |acc, x| {
             if let Some(formatting) = &x.formatting {
                 let initial = html! {
                     (x.text)
@@ -103,42 +128,21 @@ impl<'b> Renderer<'b> {
                     return match y {
                         FormatType::NoContext(f) => {
                             match f {
-                                NoContextFormat::Bold => html! {
-                                    b class="notion-bold" {
-                                        (other)
-                                    }
-                                },
-                                NoContextFormat::Italic => html! {
-                                    em class="notion-italic" {
-                                        (other)
-                                    }
-                                },
-                                NoContextFormat::Strike => html! {
-                                    strike class="notion-strike" {
-                                        (other)
-                                    }
-                                },
-                                NoContextFormat::Underline => html! {
-                                    u class="notion-underline" {
-                                        (other)
-                                    }
-                                },
-                                NoContextFormat::Code => html! {
-                                    code class="notion-code-inline" {
-                                        (other)
-                                    }
-                                },
+                                NoContextFormat::Bold => self.inline_renderer.bold(&other),
+                                NoContextFormat::Italic => self.inline_renderer.italic(&other),
+                                NoContextFormat::Strike => self.inline_renderer.strike(&other),
+                                NoContextFormat::Underline => self.inline_renderer.underline(&other),
+                                NoContextFormat::Code => self.inline_renderer.code_inline(&other),
                                 _ => other
                             }
                         },
                         _ => other
                     }
                 });
-                return html! {
-                    (acc)
-                    (resulting)
-                };
+                return self.wrapper_renderer.collect(vec![acc, resulting]);
             }
+
+            return self.wrapper_renderer.collect(vec![acc, x.text]);
             return html! {
                 (acc)
                 (x.text)
@@ -146,7 +150,7 @@ impl<'b> Renderer<'b> {
         })
     }
 
-    pub fn render(&self, id: &String) -> Markup {
+    pub fn render(&self, id: &String) -> R {
         let root = self.blocks.get(id);
 
         // We want to always return *something*, so this function doesn't deal with error cases
@@ -154,21 +158,19 @@ impl<'b> Renderer<'b> {
             let value = &root.value;
 
             if let Either::Left(value) = value { 
+                let child_ids = &value.content.unwrap_or(vec![]);
+                let children = self.render_children(&child_ids);
                 return match &value.block {
-                    RootBlockType::Page {format: _, file_ids: _, properties } => render_page(properties, &value.content, &self),
-                    RootBlockType::Text {properties} => render_text_block(properties, &value.content, &self),
-                    RootBlockType::BulletedList {properties} => render_bulleted_list(properties, &value.content, &self),
-                    RootBlockType::NumberedList {properties} => render_numbered_list(properties, &value.content, &self),
-                    RootBlockType::Toggle {properties} => render_toggle(properties, &value.content, &self),
-                    _ => html! {
-                        h1 {
-                            "Could not render!"
-                        }
-                    }
+                    RootBlockType::Page {format: _, file_ids: _, properties } => self.block_renderer.page_block(properties, &value.content, &self),
+                    RootBlockType::Text {properties} => self.block_renderer.text_block(&children, self.render_text(&properties.title)),
+                    RootBlockType::BulletedList {properties} => self.block_renderer.bulleted_list_block(properties, &value.content, &self),
+                    RootBlockType::NumberedList {properties} => self.block_renderer.numbered_list_block(properties, &value.content, &self),
+                    RootBlockType::Toggle {properties} => self.block_renderer.toggle_block(properties, &value.content, &self),
+                    _ => self.empty
                 }
             }
         }
 
-        html! {}
+        self.empty
     }
 }

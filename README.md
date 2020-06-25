@@ -44,11 +44,11 @@ Chorale is a blazing-fast Notion renderer written in Rust. It's written to rende
 - [ ] Breadcrumb
 
 ## Supported Formatting
-- [ ] Bold
-- [ ] Italicize
-- [ ] Underline
-- [ ] Strikethrough
-- [ ] Code
+- [x] Bold
+- [x] Italicize
+- [x] Underline
+- [x] Strikethrough
+- [x] Code
 - [ ] Link
 - [ ] Inline Math
 - [ ] Color

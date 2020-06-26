@@ -1,100 +1,78 @@
-use crate::renderer::Renderer;
-use crate::parser::*;
 use maud::{html, Markup};
 
-pub fn render_numbered_list_wrapper<'a>(vector: &'a Vec<&'a BaseValueType>, renderer: &Renderer) -> Markup {
-    html! {
-        ol class="notion-numbered_list-wrapper" {
-            @for item in vector.iter() {
-                (renderer.render(&item.id))
-            }
-        }
-    }
+pub trait BlockRenderer<T> {
+    fn page_block(&self, children: &T, text: Option<T>) -> T;
+    fn text_block(&self, children: &T, text: Option<T>) -> T;
+    fn bulleted_list_block(&self, children: &T, text: Option<T>) -> T;
+    fn numbered_list_block(&self, children: &T, text: Option<T>) -> T;
+    fn toggle_block(&self, children: &T, text: Option<T>) -> T;
+    fn empty(&self) -> T;
 }
 
-pub fn render_bulleted_list_wrapper<'a>(vector: &'a Vec<&'a BaseValueType>, renderer: &Renderer) -> Markup {
-    html! {
-        ul class="notion-bulleted_list-wrapper" {
-            @for item in vector.iter() {
-                (renderer.render(&item.id))
-            }
-        }
-    }
-}
+pub struct Blocks {}
 
-pub fn render_page(properties: &PageProperties, children: &Option<Vec<String>>, renderer: &Renderer) -> Markup {
-    let mut rendered_children = html! {};
-    if let Some(children) = children {
-        rendered_children = renderer.render_children(&children);
-    }
-    html! {
-        h1 class="notion-page-block" {
-            (renderer.render_text(&properties.title))
-        }
-        (rendered_children)
-    }
-}
-
-pub fn render_text_block(properties: &Option<TextProperties>, children: &Option<Vec<String>>, renderer: &Renderer) -> Markup {
-    let mut rendered_children = html! {};
-    if let Some(children) = children {
-        rendered_children = renderer.render_children(&children);
-    }
-    html! {
-        p class="notion-text-block" {
-            @if let Some(properties) = properties {
-                (renderer.render_text(&properties.title))
-            }
-            (rendered_children)
-        }
-    }
-}
-
-pub fn render_bulleted_list(properties: &Option<TextProperties>, children: &Option<Vec<String>>, renderer: &Renderer) -> Markup {
-    let mut rendered_children = html! {};
-    if let Some(children) = children {
-        rendered_children = renderer.render_children(&children);
-    }
-    html! { 
-        li class="notion-bulleted_list-block" {
-            @if let Some(properties) = properties {
-                (renderer.render_text(&properties.title))
-            }
-            div {
-                (rendered_children)
+impl BlockRenderer<Markup> for Blocks {
+    fn page_block(&self, children: &Markup, text: Option<Markup>) -> Markup {
+        html! {
+            h1 class="notion-page-block" {
+                @if let Some(text) = text {
+                    (text)
+                }
+                div {
+                    (children)
+                }
             }
         }
     }
-}
-
-pub fn render_numbered_list(properties: &Option<TextProperties>, children: &Option<Vec<String>>, renderer: &Renderer) -> Markup {
-    let mut rendered_children = html! {};
-    if let Some(children) = children {
-        rendered_children = renderer.render_children(&children);
-    }
-    html! { 
-        li class="notion-numbered_list-block" {
-            @if let Some(properties) = properties {
-                (renderer.render_text(&properties.title))
-            }
-            (rendered_children)
-        }
-    }
-}
-
-pub fn render_toggle(properties: &Option<TextProperties>, children: &Option<Vec<String>>, renderer: &Renderer) -> Markup {
-    let mut rendered_children = html! {};
-    if let Some(children) = children {
-        rendered_children = renderer.render_children(&children);
-    }
-    html! { 
-        detail {
-            @if let Some(properties) = properties {
-                (renderer.render_text(&properties.title))
-            }
-            summary {
-                (rendered_children)
+    fn text_block(&self, children: &Markup, text: Option<Markup>) -> Markup {
+        html! {
+            p class="notion-text-block" {
+                @if let Some(text) = text {
+                    (text)
+                }
+                div {
+                    (children)
+                }
             }
         }
+    }
+    fn bulleted_list_block(&self, children: &Markup, text: Option<Markup>) -> Markup {
+        html! {
+            li class="notion-bulleted_list-block" {
+                @if let Some(text) = text {
+                    (text)
+                }
+                div {
+                    (children)
+                }
+            }
+        }
+    }
+    fn numbered_list_block(&self, children: &Markup, text: Option<Markup>) -> Markup {
+        html! {
+            li class="notion-numbered_list-block" {
+                @if let Some(text) = text {
+                    (text)
+                }
+                div {
+                    (children)
+                }
+            }
+        }
+    }
+    fn toggle_block(&self, children: &Markup, text: Option<Markup>) -> Markup {
+        html! {
+            detail class="notion-toggle-block" {
+                @if let Some(text) = text {
+                    (text)
+                }
+                summary {
+                    (children)
+                }
+            }
+        }
+    }
+    fn empty(&self) -> Markup {
+        html! {}
     }
 }

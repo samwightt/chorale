@@ -11,7 +11,6 @@ pub trait BlockRenderer<T> {
 }
 
 pub trait InlineRenderer<T> {
-    type R;
     fn text(&self, text: &str) -> T;
     fn bold(&self, acc: &T) -> T;
     fn italic(&self, acc: &T) -> T;

@@ -3,5 +3,6 @@
 members = [
     "base",
     "ui",
-    "testing"
+    "testing",
+    "templating"
 ]

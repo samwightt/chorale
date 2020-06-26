@@ -1,39 +1,23 @@
-use maud::{html, Markup};
-
-pub trait WrapperRenderer<T> {
-    fn bulleted_list_wrapper(&self, items: Vec<T>) -> T;
-    fn numbered_list_wrapper(&self, items: Vec<T>) -> T;
-    fn collect(&self, items: Vec<T>) -> T;
-}
+use base::renderer::WrapperRenderer;
+use templating::attributes::*;
+use templating::tags::*;
 
 pub struct Wrapper {}
 
-impl WrapperRenderer<Markup> for Wrapper {
-    fn bulleted_list_wrapper(&self, items: Vec<Markup>) -> Markup {
-        html! {
-            ul class="notion-bulleted_list-wrapper" {
-                @for item in items.iter() {
-                    (item)
-                }
-            }
-        }
+pub fn wrapper(items: Vec<Tag>, c: &str, elem: TagType) -> Tag {
+    elem(vec![class(c)], items)
+}
+
+impl WrapperRenderer<Tag> for Wrapper {
+    fn bulleted_list_wrapper(&self, items: Vec<Tag>) -> Tag {
+        wrapper(items, "notion-bulleted_list-wrapper", ul)
     }
 
-    fn numbered_list_wrapper(&self, items: Vec<Markup>) -> Markup {
-        html! {
-            ol class="notion-numbered_list-wrapper" {
-                @for item in items.iter() {
-                    (item)
-                }
-            }
-        }
+    fn numbered_list_wrapper(&self, items: Vec<Tag>) -> Tag {
+        wrapper(items, "notion-numbered_list-wrapper", ol)
     }
 
-    fn collect(&self, items: Vec<Markup>) -> Markup {
-        html! {
-            @for item in items.iter() {
-                (item)
-            }
-        }
+    fn collect(&self, items: Vec<Tag>) -> Tag {
+        collect(items)
     }
 }

@@ -1,54 +1,31 @@
-use maud::{html, Markup};
-
-pub trait InlineRenderer<T> {
-    fn text(&self, text: &str) -> T;
-    fn bold(&self, acc: &T) -> T;
-    fn italic(&self, acc: &T) -> T;
-    fn underline(&self, acc: &T) -> T;
-    fn strike(&self, acc: &T) -> T;
-    fn code(&self, acc: &T) -> T;
-}
-
+use base::renderer::InlineRenderer;
+use templating::attributes::*;
+use templating::tags::*;
 
 pub struct Inline {}
 
-impl InlineRenderer<Markup> for Inline {
-    fn text(&self, text: &str) -> Markup {
-        html! { (text) }
+impl InlineRenderer<Tag> for Inline {
+    fn text(&self, t: &str) -> Tag {
+        text(t.to_string())
     }
-    fn bold(&self, acc: &Markup) -> Markup {
-        html! {
-            b class="notion-bold" {
-                (acc)
-            }
-        }
+
+    fn bold(&self, acc: Tag) -> Tag {
+        b(vec![class("notion-bold")], vec![acc])
     }
-    fn italic(&self, acc: &Markup) -> Markup {
-        html! {
-            em class="notion-italic" {
-                (acc)
-            }
-        }
+
+    fn italic(&self, acc: Tag) -> Tag {
+        i(vec![class("notion-italic")], vec![acc])
     }
-    fn underline(&self, acc: &Markup) -> Markup {
-        html! {
-            u class="notion-underline" {
-                (acc)
-            }
-        }
+
+    fn underline(&self, acc: Tag) -> Tag {
+        u(vec![class("notion-underline")], vec![acc])
     }
-    fn strike(&self, acc: &Markup) -> Markup {
-        html! {
-            strike class="notion-strike" {
-                (acc)
-            }
-        }
+
+    fn strike(&self, acc: Tag) -> Tag {
+        strike(vec![class("notion-strike")], vec![acc])
     }
-    fn code(&self, acc: &Markup) -> Markup {
-        html! {
-            code class="notion-code-inline" {
-                (acc)
-            }
-        }
+
+    fn code(&self, acc: Tag) -> Tag {
+        code(vec![class("notion-code-inline")], vec![acc])
     }
 }

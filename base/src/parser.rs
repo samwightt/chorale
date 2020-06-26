@@ -1,29 +1,29 @@
-use serde::{Serialize, Deserialize, Serializer, Deserializer};
-use serde_json::{Value};
-use std::collections::HashMap;
 use anyhow::Result;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde_json::Value;
+use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "lowercase")]
 pub enum YesOrNo {
     Yes,
-    No
+    No,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TodoProperties {
     pub title: Value,
-    pub checked: Vec<Vec<YesOrNo>>
+    pub checked: Vec<Vec<YesOrNo>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ColumnFormat {
-    pub column_ratio: f64
+    pub column_ratio: f64,
 }
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ImageProperties {
     pub source: Vec<Vec<String>>,
-    pub caption: Option<Vec<Vec<String>>>
+    pub caption: Option<Vec<Vec<String>>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -34,7 +34,7 @@ pub struct ImageFormat {
     pub block_full_width: Option<bool>,
     pub block_page_width: Option<bool>,
     pub block_aspect_ratio: f64,
-    pub block_preserve_scale: bool
+    pub block_preserve_scale: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -44,7 +44,7 @@ pub struct PageFormat {
     pub page_cover_position: Option<f64>,
     pub block_locked: Option<bool>,
     pub page_cover: Option<String>,
-    pub page_icon: Option<String>
+    pub page_icon: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -54,65 +54,65 @@ pub struct PagePermissions {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FigmaProperties {
-    pub source: Option<Value>
+    pub source: Option<Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FigmaFormat {
-    pub block_height: Option<i64>
+    pub block_height: Option<i64>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TextProperties {
-    pub title: Vec<FormattedText>
+    pub title: Vec<FormattedText>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct PageProperties{
-    pub title: Vec<FormattedText>
+pub struct PageProperties {
+    pub title: Vec<FormattedText>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum RootBlockType {
-    Text { 
-        properties: Option<TextProperties>
+    Text {
+        properties: Option<TextProperties>,
     },
     BulletedList {
-        properties: Option<TextProperties>
+        properties: Option<TextProperties>,
     },
     NumberedList {
-        properties: Option<TextProperties>
+        properties: Option<TextProperties>,
     },
     Toggle {
-        properties: Option<TextProperties>
+        properties: Option<TextProperties>,
     },
     Header,
     SubHeader,
     SubSubheader,
     Quote,
     ToDo {
-        properties: TodoProperties
+        properties: TodoProperties,
     },
     Divider,
     ColumnList,
     Column {
-        format: ColumnFormat
+        format: ColumnFormat,
     },
     Image {
         properties: ImageProperties,
         format: ImageFormat,
-        file_ids: Vec<String>
+        file_ids: Vec<String>,
     },
     Page {
         format: Option<PageFormat>,
         file_ids: Option<Vec<String>>,
-        properties: PageProperties
+        properties: PageProperties,
     },
     Figma {
         properties: Option<FigmaProperties>,
-        format: Option<FigmaFormat>
-    }
+        format: Option<FigmaFormat>,
+    },
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -132,7 +132,7 @@ pub struct BaseValueType {
     pub space_id: Option<String>,
     pub content: Option<Vec<String>>,
     #[serde(flatten)]
-    pub block: RootBlockType
+    pub block: RootBlockType,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -155,7 +155,7 @@ pub enum ColorType {
     BlueBackground,
     PurpleBackground,
     PinkBackground,
-    RedBackground
+    RedBackground,
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -165,24 +165,30 @@ pub enum NoContextFormat {
     Strike,
     Underline,
     Code,
-    None
+    None,
 }
 
 impl Serialize for NoContextFormat {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
         serializer.serialize_str(match *self {
             NoContextFormat::Bold => "b",
             NoContextFormat::Italic => "i",
             NoContextFormat::Strike => "s",
             NoContextFormat::Underline => "_",
             NoContextFormat::Code => "c",
-            NoContextFormat::None => ""
+            NoContextFormat::None => "",
         })
     }
 }
 
 impl<'de> Deserialize<'de> for NoContextFormat {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: Deserializer<'de> {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
         let s = String::deserialize(deserializer)?;
         match s.as_str() {
             "i" => Ok(NoContextFormat::Italic),
@@ -190,7 +196,7 @@ impl<'de> Deserialize<'de> for NoContextFormat {
             "s" => Ok(NoContextFormat::Strike),
             "_" => Ok(NoContextFormat::Underline),
             "c" => Ok(NoContextFormat::Code),
-            _ => Ok(NoContextFormat::None)
+            _ => Ok(NoContextFormat::None),
         }
     }
 }
@@ -198,14 +204,14 @@ impl<'de> Deserialize<'de> for NoContextFormat {
 #[derive(Deserialize, Serialize)]
 #[serde(untagged)]
 enum IntermediaryFormatEnum {
-    Main(Either<[NoContextFormat; 1], (String, String)>)
+    Main(Either<[NoContextFormat; 1], (String, String)>),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(from = "IntermediaryFormatEnum")]
 pub enum FormatType {
     NoContext(NoContextFormat),
-    Context(String, String)
+    Context(String, String),
 }
 
 impl From<IntermediaryFormatEnum> for FormatType {
@@ -213,7 +219,7 @@ impl From<IntermediaryFormatEnum> for FormatType {
         let IntermediaryFormatEnum::Main(s) = t;
         match s {
             Either::Left(l) => FormatType::NoContext(l[0]),
-            Either::Right((l, r)) => FormatType::Context(l, r)
+            Either::Right((l, r)) => FormatType::Context(l, r),
         }
     }
 }
@@ -221,32 +227,28 @@ impl From<IntermediaryFormatEnum> for FormatType {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(untagged)]
 enum IntermediaryFormattingRepresentation {
-    Main(Either<Vec<String>, (String, Vec<FormatType>)>)
+    Main(Either<Vec<String>, (String, Vec<FormatType>)>),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(from = "IntermediaryFormattingRepresentation")]
 pub struct FormattedText {
     pub text: String,
-    pub formatting: Option<Vec<FormatType>>
+    pub formatting: Option<Vec<FormatType>>,
 }
 
 impl From<IntermediaryFormattingRepresentation> for FormattedText {
     fn from(text: IntermediaryFormattingRepresentation) -> Self {
         let IntermediaryFormattingRepresentation::Main(s) = text;
         match s {
-            Either::Left(r) => {
-                FormattedText {
-                    text: r[0].clone(),
-                    formatting: None
-                }
-            }
-            Either::Right((text, format)) => {
-                FormattedText {
-                    text,
-                    formatting: Some(format)
-                }
-            }
+            Either::Left(r) => FormattedText {
+                text: r[0].clone(),
+                formatting: None,
+            },
+            Either::Right((text, format)) => FormattedText {
+                text,
+                formatting: Some(format),
+            },
         }
     }
 }
@@ -255,13 +257,13 @@ impl From<IntermediaryFormattingRepresentation> for FormattedText {
 #[serde(untagged)]
 pub enum Either<L, R> {
     Left(L),
-    Right(R)
+    Right(R),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BlockType {
     pub role: String,
-    pub value: Either<BaseValueType, Value>
+    pub value: Either<BaseValueType, Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -274,13 +276,13 @@ pub struct NotionUserValueType {
     pub profile_photo: String,
     pub pubonboarding_complete: Option<bool>,
     pub mobile_onboarding_complete: Option<bool>,
-    pub clipper_onboarding_complete: Option<bool>
+    pub clipper_onboarding_complete: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct NotionUserType {
     pub role: String,
-    pub value: NotionUserValueType
+    pub value: NotionUserValueType,
 }
 
 pub type BlockTableType = HashMap<String, BlockType>;
@@ -288,7 +290,7 @@ pub type BlockTableType = HashMap<String, BlockType>;
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RecordMapType {
     pub block: HashMap<String, BlockType>,
-    pub notion_user: HashMap<String, NotionUserType>
+    pub notion_user: HashMap<String, NotionUserType>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

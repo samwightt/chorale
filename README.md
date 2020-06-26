@@ -1,6 +1,14 @@
+<p align="center">
+  <img width="200" height="200" src="/static/icon.png">
+</p>
+
 # Chorale
 
-Chorale is a blazing-fast Notion renderer written in Rust. It's written to render Notion content statically to a string. This allows Chorale to render the contents of a large Notion page in *microseconds*.
+Chorale is a blazing-fast Notion renderer that makes your content sing. It's built to be as simple and as flexible as possible. 
+
+Chorale renders Notion content statically to a whatever type you want. The default `ui` crate renders it to a string, which allows Chorale to render the contents of a large Notion page in *microseconds*.
+
+Chorale 2 is currently under active development. This page will be updated often, so be sure to check it!
 
 ## Supported Blocks
 
@@ -54,6 +62,29 @@ Chorale is a blazing-fast Notion renderer written in Rust. It's written to rende
 - [ ] Color
 - [ ] Mentions
 - [ ] Comments
+
+# Running Locally
+
+Chorale hasn't been published to Crates.io yet, so to work with it, you'll need to download the workspace. Here's the commands to do that (make sure you have the latest version of Rust and Cargo installed!):
+
+```sh
+    git clone https://github.com/samwightt/chorale-renderer -b develop
+    cd chorale-renderer
+    cargo build
+```
+
+To run the testing crate:
+
+```sh
+    cd testing
+    cargo run
+```
+
+To run the benchmarks:
+```sh
+    cd testing
+    cargo bench
+```
 
 # License Info
 

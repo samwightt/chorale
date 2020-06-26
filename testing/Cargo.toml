@@ -11,3 +11,8 @@ base = { path = "../base" }
 ui = { path = "../ui" }
 anyhow = "1.0.31"
 maud = "0.21.0"
+criterion = "0.3.2"
+
+[[bench]]
+name = "benchmark"
+harness = false

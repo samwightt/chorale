@@ -9,7 +9,7 @@ impl Attribute {
 }
 
 pub fn attribute(key: &str, value: &str) -> Attribute {
-    Attribute(std::format!(r#"{}={}"#, key, value))
+    Attribute(std::format!(r#"{}="{}""#, key, value))
 }
 
 pub fn style_list(input: Vec<(&str, &str)>) -> Attribute {

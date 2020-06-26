@@ -5,10 +5,13 @@ use templating::tags::*;
 pub struct Blocks {}
 
 fn wrapper(children: Tag, text: Option<Tag>, c: &str, root: TagType, wrapper: TagType) -> Tag {
-    root(
-        vec![class(c)],
-        vec![option_include(text), wrapper(vec![], vec![children])],
-    )
+    collect(vec![
+        root(
+            vec![class(c)],
+            vec![option_include(text)]
+        ),
+        wrapper(vec![], vec![children]),
+    ])
 }
 
 impl BlockRenderer<Tag> for Blocks {
@@ -28,7 +31,7 @@ impl BlockRenderer<Tag> for Blocks {
         wrapper(children, text, "notion-bulleted_list-block", li, div)
     }
     fn toggle_block(&self, children: Tag, text: Option<Tag>) -> Tag {
-        wrapper(children, text, "notion-toggle-block", details, summary)
+        wrapper(children, text, "notion-toggle-block", |a, b| { details(a, vec![summary(vec![], b)]) }, summary)
     }
 
     fn empty(&self) -> Tag {

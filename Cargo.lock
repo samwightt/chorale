@@ -16,6 +16,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "fomat-macros"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fe56556a8c9f9f556150eb6b390bc1a8b3715fd2ddbb4585f36b6a5672c6a833"
+
+[[package]]
 name = "itoa"
 version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -173,6 +179,9 @@ dependencies = [
 [[package]]
 name = "templating"
 version = "0.1.0"
+dependencies = [
+ "fomat-macros",
+]
 
 [[package]]
 name = "testing"

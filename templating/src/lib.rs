@@ -1,4 +1,5 @@
 mod attributes;
+mod tags;
 
 #[cfg(test)]
 mod tests {

@@ -30,8 +30,29 @@ impl BlockRenderer<Tag> for Blocks {
     fn numbered_list_block(&self, children: Tag, text: Option<Tag>) -> Tag {
         wrapper(children, text, "notion-bulleted_list-block", li, div)
     }
+
     fn toggle_block(&self, children: Tag, text: Option<Tag>) -> Tag {
         wrapper(children, text, "notion-toggle-block", |a, b| { details(a, vec![summary(vec![], b)]) }, summary)
+    }
+
+    fn quote_block(&self, children: Tag, text: Option<Tag>) -> Tag {
+        wrapper(children, text, "notion-quote-block", q, div)
+    }
+
+    fn header_block(&self, children: Tag, text: Option<Tag>) -> Tag {
+        wrapper(children, text, "notion-header-block", h1, div)
+    }
+
+    fn sub_header_block(&self, children: Tag, text: Option<Tag>) -> Tag {
+        wrapper(children, text, "notion-sub_header-block", h2, div)
+    }
+
+    fn sub_sub_header_block(&self, children: Tag, text: Option<Tag>) -> Tag {
+        wrapper(children, text, "notion-sub_sub_header-block", h3, div)
+    }
+
+    fn divider_block(&self, children: Tag) -> Tag {
+        hr(vec![class("notion-divider-block")], vec![children])
     }
 
     fn empty(&self) -> Tag {

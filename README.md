@@ -15,14 +15,14 @@ Chorale 2 is currently under active development. This page will be updated often
 - [x] Text
 - [x] Page
 - [ ] To-do list
-- [ ] Heading 1
-- [ ] Heading 2
-- [ ] Heading 3
+- [x] Heading 1
+- [x] Heading 2
+- [x] Heading 3
 - [x] Bulleted list
 - [x] Numbered list
 - [x] Toggle list
-- [ ] Quote
-- [ ] Divider
+- [x] Quote
+- [x] Divider
 - [ ] Link to page
 - [ ] Callout
 - [ ] Image

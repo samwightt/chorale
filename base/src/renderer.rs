@@ -7,6 +7,11 @@ pub trait BlockRenderer<T> {
     fn bulleted_list_block(&self, children: T, text: Option<T>) -> T;
     fn numbered_list_block(&self, children: T, text: Option<T>) -> T;
     fn toggle_block(&self, children: T, text: Option<T>) -> T;
+    fn quote_block(&self, children: T, text: Option<T>) -> T;
+    fn header_block(&self, children: T, text: Option<T>) -> T;
+    fn sub_header_block(&self, children: T, text: Option<T>) -> T;
+    fn sub_sub_header_block(&self, children: T, text: Option<T>) -> T;
+    fn divider_block(&self, children: T) -> T;
     fn empty(&self) -> T;
 }
 
@@ -207,10 +212,35 @@ impl<'b, R, B: BlockRenderer<R>, I: InlineRenderer<R>, W: WrapperRenderer<R>>
                             properties.as_ref().map(|x| self.render_text(&x.title)),
                         )
                     }
+                    RootBlockType::Quote { properties } => {
+                        self.block_renderer.quote_block(
+                            children,
+                            properties.as_ref().map(|x| self.render_text(&x.title))
+                        )
+                    }
+                    RootBlockType::Header { properties } => {
+                        self.block_renderer.header_block(
+                            children,
+                            properties.as_ref().map(|x| self.render_text(&x.title))
+                        )
+                    }
+                    RootBlockType::SubHeader { properties } => {
+                        self.block_renderer.sub_header_block(
+                            children,
+                            properties.as_ref().map(|x| self.render_text(&x.title))
+                        )
+                    }
+                    RootBlockType::SubSubHeader { properties } => {
+                        self.block_renderer.sub_sub_header_block(
+                            children,
+                            properties.as_ref().map(|x| self.render_text(&x.title))
+                        )
+                    }
                     RootBlockType::Toggle { properties } => self.block_renderer.toggle_block(
                         children,
                         properties.as_ref().map(|x| self.render_text(&x.title)),
                     ),
+                    RootBlockType::Divider => self.block_renderer.divider_block(children),
                     _ => self.block_renderer.empty(),
                 };
             }

@@ -87,12 +87,20 @@ pub enum RootBlockType {
     Toggle {
         properties: Option<TextProperties>,
     },
-    Header,
-    SubHeader,
-    SubSubheader,
-    Quote,
+    Header {
+        properties: Option<TextProperties>,
+    },
+    SubHeader {
+        properties: Option<TextProperties>,
+    },
+    SubSubHeader {
+        properties: Option<TextProperties>,
+    },
+    Quote {
+        properties: Option<TextProperties>,
+    },
     ToDo {
-        properties: TodoProperties,
+        properties: Option<TodoProperties>,
     },
     Divider,
     ColumnList,

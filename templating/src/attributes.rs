@@ -9,7 +9,7 @@ impl Attribute {
 }
 
 pub fn attribute(key: &str, value: &str) -> Attribute {
-    Attribute(std::format!(r#"{}="{}""#, key, value))
+    Attribute([key, "=\"", value, "\""].concat())
 }
 
 pub fn style_list(input: Vec<(&str, &str)>) -> Attribute {
@@ -48,4 +48,8 @@ pub fn placeholder(name: &str) -> Attribute {
 
 pub fn selected(name: &str) -> Attribute {
     attribute("selected", name)
+}
+
+pub fn href(name: &str) -> Attribute {
+    attribute("href", name)
 }

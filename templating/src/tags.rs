@@ -1,5 +1,6 @@
 use crate::attributes::Attribute;
 use std::format;
+#[derive(Debug)]
 pub struct Tag(String);
 
 pub type TagType = fn(a: Vec<Attribute>, b: Vec<Tag>) -> Tag;
@@ -54,17 +55,17 @@ pub fn tag(name: String, attributes: Vec<Attribute>, children: Vec<Tag>) -> Tag 
     if attributes.len() != 0 && children.len() != 0 {
         let attributes = join_attributes(attributes);
         let children = join_children(children);
-        return Tag(format!("<{} {}>{}</{}>", name, attributes, children, name));
+        return Tag(["<", &name, " ", &attributes, ">", &children, "</", &name, ">"].concat())
     }
     if attributes.len() != 0 {
         let attributes = join_attributes(attributes);
-        return Tag(format!("<{} {}/>", name, attributes));
+        return Tag(["<", &name, " ", &attributes, "/>"].concat());
     }
     if children.len() != 0 {
         let children = join_children(children);
-        return Tag(format!("<{}>{}</{}>", name, children, name));
+        return Tag(["<", &name, ">", &children, "</", &name, ">"].concat());
     } else {
-        return Tag(format!("<{}/>", name));
+        return Tag(["<", &name, "/>"].concat());
     }
 }
 

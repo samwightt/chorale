@@ -204,14 +204,37 @@ impl<'de> Deserialize<'de> for NoContextFormat {
 #[derive(Deserialize, Serialize)]
 #[serde(untagged)]
 enum IntermediaryFormatEnum {
-    Main(Either<[NoContextFormat; 1], (String, String)>),
+    Main(Either<[NoContextFormat; 1], ContextFormat>),
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
+pub enum IntermediaryContextFormattingRepresentation {
+    Main((String, String))
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(from = "IntermediaryContextFormattingRepresentation")]
+pub enum ContextFormat {
+    Link(String),
+    None
+}
+
+impl From<IntermediaryContextFormattingRepresentation> for ContextFormat {
+    fn from(t: IntermediaryContextFormattingRepresentation) -> Self {
+        let IntermediaryContextFormattingRepresentation::Main((a, b)) = t;
+        match a.as_str() {
+            "a" => ContextFormat::Link(b),
+            _ => ContextFormat::None
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(from = "IntermediaryFormatEnum")]
 pub enum FormatType {
     NoContext(NoContextFormat),
-    Context(String, String),
+    Context(ContextFormat),
 }
 
 impl From<IntermediaryFormatEnum> for FormatType {
@@ -219,7 +242,7 @@ impl From<IntermediaryFormatEnum> for FormatType {
         let IntermediaryFormatEnum::Main(s) = t;
         match s {
             Either::Left(l) => FormatType::NoContext(l[0]),
-            Either::Right((l, r)) => FormatType::Context(l, r),
+            Either::Right(l) => FormatType::Context(l),
         }
     }
 }

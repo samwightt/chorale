@@ -28,4 +28,8 @@ impl InlineRenderer<Tag> for Inline {
     fn code(&self, acc: Tag) -> Tag {
         code(vec![class("notion-code-inline")], vec![acc])
     }
+
+    fn link(&self, acc: Tag, link: &String) -> Tag {
+        a(vec![class("notion-link"), href(link)], vec![acc])
+    }
 }

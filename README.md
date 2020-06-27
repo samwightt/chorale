@@ -57,7 +57,7 @@ Chorale 2 is currently under active development. This page will be updated often
 - [x] Underline
 - [x] Strikethrough
 - [x] Code
-- [ ] Link
+- [x] Link
 - [ ] Inline Math
 - [ ] Color
 - [ ] Mentions

@@ -16,6 +16,7 @@ pub trait InlineRenderer<T> {
     fn italic(&self, acc: T) -> T;
     fn underline(&self, acc: T) -> T;
     fn strike(&self, acc: T) -> T;
+    fn link(&self, acc: T, link: &String) -> T;
     fn code(&self, acc: T) -> T;
 }
 
@@ -118,9 +119,9 @@ impl<'b, R, B: BlockRenderer<R>, I: InlineRenderer<R>, W: WrapperRenderer<R>>
                         a.push(result);
                         return (a, vec![]);
                     } else if b.len() > 0 {
-                        a.push(rendered);
                         let result = self.render_wrapper(&b);
                         a.push(result);
+                        a.push(rendered);
                         return (a, vec![]);
                     } else {
                         a.push(rendered);
@@ -154,6 +155,10 @@ impl<'b, R, B: BlockRenderer<R>, I: InlineRenderer<R>, W: WrapperRenderer<R>>
                             NoContextFormat::Code => self.inline_renderer.code(other),
                             _ => other,
                         },
+                        FormatType::Context(f) => match f {
+                            ContextFormat::Link(s) => self.inline_renderer.link(other, s),
+                            _ => other
+                        }
                         _ => other,
                     };
                 });

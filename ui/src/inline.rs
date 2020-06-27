@@ -1,6 +1,8 @@
 use base::renderer::InlineRenderer;
 use templating::attributes::*;
 use templating::tags::*;
+use base::parser::ColorType;
+use crate::utils::color_class_name;
 
 pub struct Inline {}
 
@@ -31,5 +33,9 @@ impl InlineRenderer<Tag> for Inline {
 
     fn link(&self, acc: Tag, link: &String) -> Tag {
         a(vec![class("notion-link"), href(link)], vec![acc])
+    }
+
+    fn highlight(&self, acc: Tag, color: &ColorType) -> Tag {
+        span(vec![class(color_class_name(color))], vec![acc])
     }
 }

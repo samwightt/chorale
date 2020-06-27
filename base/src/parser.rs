@@ -135,7 +135,7 @@ pub struct BaseValueType {
     pub block: RootBlockType,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "snake_case")]
 pub enum ColorType {
     Gray,
@@ -156,6 +156,7 @@ pub enum ColorType {
     PurpleBackground,
     PinkBackground,
     RedBackground,
+    None,
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -217,7 +218,32 @@ pub enum IntermediaryContextFormattingRepresentation {
 #[serde(from = "IntermediaryContextFormattingRepresentation")]
 pub enum ContextFormat {
     Link(String),
+    Highlight(ColorType),
     None
+}
+
+pub fn from_color(c: &str) -> ColorType {
+    match c {
+        "gray" => ColorType::Gray,
+        "brown" => ColorType::Brown,
+        "orange" => ColorType::Orange,
+        "yellow" => ColorType::Yellow,
+        "teal" => ColorType::Teal,
+        "blue" => ColorType::Blue,
+        "purple" => ColorType::Purple,
+        "pink" => ColorType::Pink,
+        "red" => ColorType::Red,
+        "gray_background" => ColorType::GrayBackground,
+        "brown_background" => ColorType::BrownBackground,
+        "orange_background" => ColorType::OrangeBackground,
+        "yellow_background" => ColorType::YellowBackground,
+        "teal_background" => ColorType::TealBackground,
+        "blue_background" => ColorType::BlueBackground,
+        "purple_background" => ColorType::PurpleBackground,
+        "pink_background" => ColorType::PinkBackground,
+        "red_background" => ColorType::RedBackground,
+        _ => ColorType::None
+    }
 }
 
 impl From<IntermediaryContextFormattingRepresentation> for ContextFormat {
@@ -225,6 +251,7 @@ impl From<IntermediaryContextFormattingRepresentation> for ContextFormat {
         let IntermediaryContextFormattingRepresentation::Main((a, b)) = t;
         match a.as_str() {
             "a" => ContextFormat::Link(b),
+            "h" => ContextFormat::Highlight(from_color(&b)),
             _ => ContextFormat::None
         }
     }

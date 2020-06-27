@@ -8,7 +8,7 @@ pub struct Inline {}
 
 impl InlineRenderer<Tag> for Inline {
     fn text(&self, t: &str) -> Tag {
-        text(t.to_string())
+        text(t)
     }
 
     fn bold(&self, acc: Tag) -> Tag {

@@ -18,6 +18,7 @@ pub trait InlineRenderer<T> {
     fn strike(&self, acc: T) -> T;
     fn link(&self, acc: T, link: &String) -> T;
     fn code(&self, acc: T) -> T;
+    fn highlight(&self, acc: T, color: &ColorType) -> T;
 }
 
 pub trait WrapperRenderer<T> {
@@ -157,9 +158,9 @@ impl<'b, R, B: BlockRenderer<R>, I: InlineRenderer<R>, W: WrapperRenderer<R>>
                         },
                         FormatType::Context(f) => match f {
                             ContextFormat::Link(s) => self.inline_renderer.link(other, s),
+                            ContextFormat::Highlight(c) => self.inline_renderer.highlight(other, c),
                             _ => other
                         }
-                        _ => other,
                     };
                 });
                 return self.wrapper_renderer.collect(vec![acc, resulting]);

@@ -1,8 +1,9 @@
 [workspace]
 
 members = [
+    "api",
     "base",
     "ui",
     "testing",
-    "templating"
+    "templating",
 ]

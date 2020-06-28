@@ -4,11 +4,11 @@
 
 # Chorale
 
-Chorale is a blazing-fast Notion renderer that makes your content sing. It's built to be as simple and as flexible as possible. 
+Chorale is a set of tools for interacting with the Notion API and rendering Notion pages. Chorale contains a blazing-fast Notion page renderer, the most accurate, type-safe Notion JSON parser, an extremely fast Notion API library, and much more. 
 
-Chorale renders Notion content statically to a whatever type you want. The default `ui` crate renders it to a string, which allows Chorale to render the contents of a large Notion page in *microseconds*.
+Chorale's renderer outputs Notion content statically to whatever type you want. The default `ui` crate renders it to a string, which allows Chorale to render the contents of a large Notion page in *microseconds*.
 
-Chorale 2 is currently under active development. This page will be updated often, so be sure to check it!
+Chorale is currently under active development. This page will be updated often, so be sure to check it!
 
 ## Supported Blocks
 

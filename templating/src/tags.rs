@@ -1,5 +1,4 @@
 use crate::attributes::Attribute;
-use std::format;
 use regex::{Regex, Captures};
 
 #[derive(Debug)]
@@ -69,30 +68,19 @@ fn join_children(tags: Vec<Tag>) -> String {
 }
 
 pub fn tag(name: &str, attributes: Vec<Attribute>, children: Vec<Tag>) -> Tag {
-    if attributes.len() != 0 && children.len() != 0 {
-        let attributes = join_attributes(attributes);
-        let children = join_children(children);
+    let attributes = join_attributes(attributes);
+    let children = join_children(children);
+
+    if attributes.len() > 0 && children.len() > 0 {
         return Tag(["<", &name, " ", &attributes, ">", &children, "</", &name, ">"].concat())
     }
-    if attributes.len() != 0 {
-        let attributes = join_attributes(attributes);
+    if attributes.len() > 0 {
         return Tag(["<", &name, " ", &attributes, "/>"].concat());
     }
-    if children.len() != 0 {
-        let children = join_children(children);
+    if children.len() > 0 {
         return Tag(["<", &name, ">", &children, "</", &name, ">"].concat());
-    } else {
-        return Tag(["<", &name, "/>"].concat());
-    }
-}
-
-pub fn single_tag(name: String, attributes: Vec<Attribute>) -> Tag {
-    if attributes.len() != 0 {
-        let attributes = join_attributes(attributes);
-        return Tag(format!("<{} {}/>", name, attributes));
-    } else {
-        return Tag(format!("<{}/>", name));
-    }
+    } 
+    return empty();
 }
 
 macro_rules! t {

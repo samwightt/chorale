@@ -124,6 +124,11 @@ pub enum RootBlockType {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+pub struct BlockFormatType {
+    pub block_color: Option<ColorType>
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct BaseValueType {
     pub id: String,
     pub version: i64,
@@ -139,6 +144,7 @@ pub struct BaseValueType {
     pub shard_id: Option<i64>,
     pub space_id: Option<String>,
     pub content: Option<Vec<String>>,
+    pub format: Option<BlockFormatType>,
     #[serde(flatten)]
     pub block: RootBlockType,
 }

@@ -4,11 +4,20 @@
 
 # Chorale
 
-Chorale is a blazing-fast Notion renderer that makes your content sing. It's built to be as simple and as flexible as possible. 
+Chorale is a set of simple, composable, and well-designed tools for interacting with Notion.
 
-Chorale renders Notion content statically to a whatever type you want. The default `ui` crate renders it to a string, which allows Chorale to render the contents of a large Notion page in *microseconds*.
+- **Simple**: A library shouldn't be the pain point when you're trying to interact with your content. Chorale makes sure that's not the case. Chorale's APIs are small and easy to use while being incredibly fast and efficient.
+- **Composable**: All of Chorale's tools are built on top of each other like legos. If you need to customize anything, you can easily swap out one of the pieces for your own.
+- **Well-designed**: Chorale is a joy to use. Time is spent designing each of Chorale's APIs, making sure they're not only functional, but that they just feel good to develop with.
 
-Chorale 2 is currently under active development. This page will be updated often, so be sure to check it!
+Chorale is currently under active development. This page will be updated often, so be sure to check it!
+
+# Things You Can Do With Chorale
+
+- **Interact with the Notion API**: Chorale's Notion API interface lets you easily get content from Notion's private API. It's completely type-safe and is built to run incredibly fast with async I/O.
+- **Render Notion content**: Chorale's Notion page renderer can render Notion pages up to 10x faster than the default Notion app; it can render pages in *microseconds*. It's completely modular and customizable: you control the output.
+- **Run a rendering server**: Use Notion as a CMS and render pages on demand. Attach a custom domain and custom theme to your Notion page, rendering updates in real-time.
+- **Generate static pages**: Use Notion as a CMS to generate static pages with Chorale. Chorale's page generator can efficiently batch page renderings at the same time, generating your site in half the amount of time.
 
 ## Supported Blocks
 

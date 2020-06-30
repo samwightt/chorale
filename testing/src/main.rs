@@ -7,13 +7,12 @@ use api::load_page_chunks::load;
 #[tokio::main]
 async fn main() {
     println!("Starting now!");
-    load().await.unwrap();
-    // let json = fs::read_to_string("src.json").unwrap();
-    // let result = parse(json).unwrap();
-    // let renderer = Renderer::new(&result.record_map.block, Blocks {}, Inline {}, Wrapper {});
-    // let html = renderer
-    //     .render("ddda599f-ff69-4974-9dec-86f6abf3209a")
-    //     .to_string();
+    let result = load("ddda599f-ff69-4974-9dec-86f6abf3209a").await.unwrap();
+    let renderer = Renderer::new(&result.record_map.block, Blocks {}, Inline {}, Wrapper {});
+    println!("Starting rendering... now!!");
+    let html = renderer
+        .render("ddda599f-ff69-4974-9dec-86f6abf3209a")
+        .to_string();
 
-    // fs::write("output.html", &html).unwrap();
+    fs::write("output.html", &html).unwrap();
 }

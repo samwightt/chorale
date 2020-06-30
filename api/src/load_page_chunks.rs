@@ -1,12 +1,14 @@
 use anyhow::Result;
+use base::parser::{LoadPageChunkData, parse};
 
-pub async fn load() -> Result<()> {
+pub async fn load(id: &str) -> Result<LoadPageChunkData> {
     let client = reqwest::Client::new();
+    let body = r#"{"pageId":""#.to_string() + id + r#"","limit":100000,"cursor":{"stack":[[{"table":"block","id":""# + id + r#"","index":0}]]},"chunkNumber":0,"verticalColumns":false}"#;
     let res = client.post("https://www.notion.so/api/v3/loadPageChunk")
-        .body(r#"{"pageId":"ddda599f-ff69-4974-9dec-86f6abf3209a","limit":50,"cursor":{"stack":[[{"table":"block","id":"ddda599f-ff69-4974-9dec-86f6abf3209a","index":0}]]},"chunkNumber":0,"verticalColumns":false}"#)
+        .body(body)
         .header("content-type", "application/json")
-        .send().await?;
+        .send().await?
+        .text().await?;
 
-    println!("{:?}", res.text().await?);
-    Ok(())
+    Ok(parse(res)?)
 }

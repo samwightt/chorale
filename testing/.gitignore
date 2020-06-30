@@ -2,3 +2,4 @@ node_modules
 .next
 /target
 .vscode
+output.html

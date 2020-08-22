@@ -125,7 +125,7 @@ pub enum RootBlockType {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BlockFormatType {
-    pub block_color: Option<ColorType>
+    pub block_color: Option<ColorType>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -225,7 +225,7 @@ enum IntermediaryFormatEnum {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(untagged)]
 pub enum IntermediaryContextFormattingRepresentation {
-    Main((String, String))
+    Main((String, String)),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -233,7 +233,7 @@ pub enum IntermediaryContextFormattingRepresentation {
 pub enum ContextFormat {
     Link(String),
     Highlight(ColorType),
-    None
+    None,
 }
 
 pub fn from_color(c: &str) -> ColorType {
@@ -256,7 +256,7 @@ pub fn from_color(c: &str) -> ColorType {
         "purple_background" => ColorType::PurpleBackground,
         "pink_background" => ColorType::PinkBackground,
         "red_background" => ColorType::RedBackground,
-        _ => ColorType::None
+        _ => ColorType::None,
     }
 }
 
@@ -266,7 +266,7 @@ impl From<IntermediaryContextFormattingRepresentation> for ContextFormat {
         match a.as_str() {
             "a" => ContextFormat::Link(b),
             "h" => ContextFormat::Highlight(from_color(&b)),
-            _ => ContextFormat::None
+            _ => ContextFormat::None,
         }
     }
 }
